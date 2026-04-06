@@ -1,5 +1,4 @@
 # Arquivos de dados e modelos (Python)
-*.npy
 *.keras
 *.h5
 
