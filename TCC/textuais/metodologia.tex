@@ -1,0 +1,322 @@
+\chapter[Metodologia]{Metodologia}
+
+Este capítulo descreve a metodologia adotada para o desenvolvimento deste trabalho, descrevendo as etapas realizadas desde a obtenção dos dados 
+até a avaliação do desempenho dos modelos propostos. Inicialmente, foi realizada a seleção e organização da MIT-BIH Arrhythmia 
+Database, seguida pelas etapas de pré-processamento dos sinais, depois os dados foram estruturados em conjuntos de treinamento, validação e 
+teste. Na sequência, foram projetadas e implementadas duas arquiteturas de redes neurais convolucionais: uma CNN1D, aplicada diretamente aos 
+sinais temporais de ECG, e uma CNN2D, na qual os batimentos foram representados em formato bidimensional. Ambas as arquiteturas foram treinadas sob a 
+mesma base de dados, sendo os parâmetros de configuração e arquitetura ajustados de forma empírica por meio de experimentações. Essa padronização 
+metodológica possibilitou uma avaliação e comparação direta de desempenho.
+
+\section{Base de dados MIT-BIH}
+
+A base de dados utilizada neste trabalho foi a MIT-BIH Arrhythmia Database, um dos conjuntos de dados mais empregados em 
+pesquisas relacionadas à detecção e classificação de arritmias cardíacas. Essa base foi desenvolvida pelo MIT em parceria com o Beth Israel 
+Hospital, com o objetivo de fornecer um padrão de referência para avaliação de algoritmos de análise 
+automática de sinais de ECG.
+
+A base do MIT-BIH é composta por 48 registros de ECG, com aproximadamente 30 minutos cada, obtidos a partir de pacientes 
+monitorados em ambiente clínico. Os sinais foram adquiridos com frequência de amostragem de 360 Hz. Cada registro foi anotado 
+por especialistas, indicando a localização temporal dos batimentos e sua respectiva classificação.
+
+Existem 15 tipos de classes no banco que podem ser vista na Tabela 1, como esperado em qualquer base de dados médicos a quantidade de casos 
+normais é muito supeior as demais.
+
+\begin{table}[ht]
+  \caption{Classes da base de dados do MIT-BIH}
+  \label{tab: table1}
+  \centering
+
+  \begin{tabular}{cc}
+    \hline
+    \bfseries Classe & \bfseries Símbolo\\
+    \hline
+    Normal beat & N\\
+    Left bundle branch block beat & L\\
+    Right bundle branch block beat & R\\
+    Atrial premature beat & A\\
+    Aberrated atrial premature beat & a\\
+    Nodal (junctional) premature beat & J\\
+    Supraventricular premature beat & S\\
+    Premature ventricular contraction & V\\
+    Fusion of ventricular and normal beat & F\\
+    Atrial escape beat & e\\
+    Nodal (junctional) escape beat & j\\
+    Ventricular escape beat & E\\
+    Fusion of paced and normal beat & f\\
+    Paced beat & /\\
+    Unclassifiable beat & Q\\
+    \hline
+  \end{tabular}
+
+  \source
+\end{table}
+
+Para reduzir a grande diferença entre as classes foi utilizado o padrão da Association for the Advancement of Medical Instrumentation (AAMI), 
+uma organização que é líder em padrões para tecnologia de saúde. O padrão da AAMI visa agrupar as 15 classes da base do MIT-BIH em 5 grupos 
+com características parecidas, como pode ser visto na Tabela 2
+
+\begin{table}[ht]
+  \caption{Classificação das classes de ECG segundo o padrão AAMI}
+  \label{tab: table2}
+  \centering
+  \begin{tabular}{cc}
+    \hline
+    \bfseries Classe AAMI & \bfseries Tipos de batimentos (MIT-BIH) \\
+    \hline
+    Normal (N) & N, L, R, e, j \\
+    Supraventricular (S) & A, a, J, S \\
+    Ventricular (V) & V, E \\
+    Fusion (F) & F \\
+    Unknown (Q) & /, f, Q \\
+    \hline
+  \end{tabular}
+
+  \legend{Adaptado de \cite{DasMK}}
+\end{table}
+
+
+\section{Pré-processamento}
+
+A etapa de pré-processamento teve como objetivo preparar os sinais do ECG para utilização no treinamento e avaliação dos 
+modelos de redes neurais convolucionais. Essa etapa é fundamental, uma vez que os sinais brutos apresentam variações de duração, amplitude e 
+distribuição entre as classes, o que pode comprometer o desempenho.
+
+Inicialmente, foram selecionados todos os registros da base MIT-BIH Arrhythmia Database, compostos por sinais de ECG adquiridos com frequência de 
+amostragem de 360 Hz. Para cada registro, foi considerada apenas uma derivação do sinal, correspondente ao canal 0, que representa a derivação MLII. 
+As anotações disponibilizadas pela base foram utilizadas para identificar a posição temporal dos batimentos cardíacos e seus respectivos rótulos.
+
+A partir das anotações, cada batimento foi segmentado em uma janela centrada no pico do complexo QRS. Para essa segmentação, foi definida uma 
+janela inicial maior, com 400 amostras, de modo a permitir deslocamentos temporais durante o processo de aumento de dados. Batimentos localizados 
+próximos às extremidades do sinal, que não permitiam a extração completa da janela, foram descartados.
+
+Em seguida, cada segmento foi normalizado individualmente por meio da normalização min–max, garantindo que os valores do sinal estivessem 
+restritos ao intervalo entre 0 e 1. Essa normalização reduz a influência de variações de amplitude entre diferentes registros e 
+contribui para a estabilidade do treinamento das redes neurais.
+
+Após a segmentação e normalização, os batimentos foram mapeados para as cinco classes definidas pelo padrão AAMI: batimentos normais (N), 
+supraventriculares (S), ventriculares (V), de fusão (F) e desconhecidos (Q). Esse mapeamento foi realizado a partir das classes originais da 
+base MIT-BIH, conforme recomendado na literatura, possibilitando a comparação dos resultados com outros trabalhos da área.
+
+Devido ao desbalanceamento natural entre as classes da base MIT-BIH Arrhythmia Database, foi aplicado um processo de balanceamento no conjunto de 
+treinamento. A definição das quantidades por classe foi baseada na classe minoritária, que possui aproximadamente 800 amostras no total. Dessa forma, 
+foram reservadas 200 amostras para validação e 200 para teste, restando cerca de 400 amostras para o treinamento nessa classe. Para garantir equilíbrio 
+entre as classes durante o treinamento, foi estabelecido um total fixo de 1600 amostras por classe.
+
+Classes com quantidade superior a esse valor foram submetidas à subamostragem aleatória. Já as classes com menor quantidade de amostras foram balanceadas 
+por meio de aumento artificial de dados até atingir 1600 amostras por classe. Esse processo foi realizado a partir da replicação aleatória de amostras 
+existentes, seguida da aplicação de transformações estocásticas.
+
+Foram empregadas três técnicas de aumento de dados. A primeira consiste no deslocamento temporal da janela de segmentação, no qual um segmento expandido 
+de 400 amostras (360 amostras centrais mais uma margem de ±20 amostras) é recortado aleatoriamente, gerando variações na posição do batimento dentro da 
+janela final. A segunda técnica corresponde à adição de ruído gaussiano com média zero e desvio padrão de 0,01, aplicado ao sinal normalizado. A terceira 
+técnica consiste na variação de escala da amplitude do sinal, por meio de um fator multiplicativo aleatório uniformemente distribuído no intervalo de 
+0,95 a 1,05.
+
+Para cada nova amostra gerada, uma das três técnicas de aumento de dados foi selecionada aleatoriamente com igual probabilidade. O número de amostras 
+geradas por técnica não foi previamente fixado, sendo determinado de forma dinâmica de acordo com a necessidade de balanceamento de cada classe, até 
+atingir o total de 1600 amostras no conjunto de treinamento. Ao final desse processo, os conjuntos gerados foram armazenados em arquivos, a fim de 
+evitar a necessidade de reprocessamento em execuções futuras.
+
+Após o balanceamento, todos os segmentos foram recortados para uma janela final de 360 amostras, correspondente a aproximadamente um segundo de sinal, 
+centrada no batimento cardíaco. Para os conjuntos de validação e teste, não foi aplicado aumento de dados, sendo realizada apenas a extração central da 
+janela, de modo a preservar a fidelidade dos sinais utilizados na avaliação.
+
+\begin{figure}[ht]
+  \caption{Exemplo de batimento da classe N}
+  \label{fig: fig15}
+  \centering
+  \includegraphics[width=0.7\textwidth]{Exemplo_Classe_N.png}
+  \source
+\end{figure}
+
+Por fim, os conjuntos finais de treinamento e teste foram armazenados em arquivos no formato .npy, permitindo reutilização eficiente dos dados
+nas etapas subsequentes de treinamento e avaliação dos modelos.
+
+\section{Arquitetura e treinamento da CNN1D}
+
+Nesta etapa foi desenvolvido e treinado um modelo de CNN1D, aplicado diretamente aos sinais temporais de eletrocardiograma previamente 
+segmentados e normalizados. A utilização de CNN1D é adequada para esse tipo de dado, pois permite a extração automática de características 
+locais ao longo do eixo temporal do sinal, como padrões relacionados ao complexo QRS, ondas P e T.
+
+A arquitetura proposta recebeu como entrada segmentos de ECG com 360 amostras, representando um único canal temporal. O modelo foi estruturado 
+de forma sequencial, composto por três blocos convolucionais seguidos por uma etapa de classificação totalmente conectada.
+
+O primeiro bloco convolucional é formado por uma camada Conv1D com 32 filtros e tamanho de kernel igual a 5, utilizando a função de ativação 
+ReLU. Em seguida, foi aplicada a normalização em lote (Batch Normalization), com o objetivo de estabilizar o processo de treinamento e acelerar
+a convergência do modelo. Posteriormente, uma camada de MaxPooling1D com fator de redução igual a 2 foi utilizada para diminuir a 
+dimensionalidade do sinal e reduzir a complexidade computacional.
+
+O segundo bloco segue estrutura semelhante, contendo uma camada Conv1D com 64 filtros e kernel de tamanho 5, seguida novamente por Batch 
+Normalization e MaxPooling1D. Esse bloco permite a extração de padrões temporais mais complexos e hierárquicos presentes nos sinais de ECG.
+
+O terceiro bloco convolucional é composto por uma camada Conv1D com 128 filtros e kernel de tamanho 3, também utilizando ativação ReLU. Assim 
+como nos blocos anteriores, foram aplicadas as etapas de normalização em lote e pooling, aprofundando a capacidade de representação do 
+modelo e reduzindo progressivamente a dimensão do sinal.
+
+Após os blocos convolucionais, a saída do modelo foi transformada em um vetor unidimensional por meio da camada Flatten. Em seguida, foi 
+aplicada uma camada de Dropout com taxa de 50\%, com o objetivo de reduzir o risco de sobreajuste durante o treinamento. A etapa de classificação
+é composta por uma camada densa com 100 neurônios e função de ativação ReLU, seguida por uma camada de saída com cinco neurônios e função de 
+ativação Softmax, correspondente às cinco classes definidas pelo padrão AAMI.
+
+\begin{table}[ht]
+  \caption{Detalhamento da arquitetura proposta}
+  \label{tab: table3}
+  \centering
+
+  \begin{tabular}{cccc}
+    \hline
+    \bfseries Camada & \bfseries Filtros/Neurônios & \bfseries Tamanho do Kernel & \bfseries Saída\\
+    \hline
+    Entrada	&	-	&	-	&	(360, 1)\\
+    Conv1D 1	&	32	&	5	&	(356, 32)\\
+    Batch Norm 1	&	-	&	-	&	(356, 32)\\
+    Max Pooling 1	&	-	&	2	&	(178, 32)\\
+    Conv1D 2	&	64	&	5	&	(174, 64)\\
+    Batch Norm 2	&	-	&	-	&	(174, 64)\\
+    Max Pooling 2	&	-	&	2	&	(87, 64)\\
+    Conv1D 3	&	128	&	3	&	(85, 128)\\
+    Batch Norm 3	&	-	&	-	&	(85, 128)\\
+    Max Pooling 3	&	-	&	2	&	(42, 128)\\
+    Flatten	&	-	&	-	&	(5376)\\
+    Dropout	&	-	&	-	&	(5376)\\
+    Densa (FC)	&	100	&	-	&	(100)\\
+    Saída (Softmax)	&	5	&	-	&	(5)\\
+
+    \hline
+  \end{tabular}
+
+  \source
+\end{table}
+
+O modelo foi treinado utilizando o otimizador Adam, com taxa de aprendizado inicial igual a 0,001, e a função de perda categórica, adequada para
+problemas de classificação multiclasse.
+
+Para aprimorar o processo de treinamento e evitar sobreajuste, foram empregados mecanismos de controle por meio de callbacks. O ajuste dinâmico
+da taxa de aprendizado foi realizado utilizando o método ReduceLROnPlateau, que reduz a taxa de aprendizado quando a função de perda de 
+validação não apresenta melhora após um número definido de épocas. Além disso, foi adotado o critério de parada antecipada (Early Stopping), 
+interrompendo o treinamento quando não há melhora significativa no desempenho de validação, restaurando automaticamente os melhores pesos 
+obtidos. Também foi implementado o salvamento do melhor modelo durante o treinamento, com base no menor valor da perda de validação.
+
+O treinamento foi realizado por até 100 épocas, com tamanho de lote igual a 64 amostras, utilizando os conjuntos de treinamento e teste 
+definidos na etapa de pré-processamento. Ao final do treinamento, o modelo com melhor desempenho foi carregado e utilizado para a avaliação 
+final, permitindo a obtenção das métricas de desempenho e da matriz de confusão para cada classe.
+
+A definição dos hiperparâmetros do modelo, como o número de filtros, tamanhos de kernel, taxa de dropout e taxa de aprendizado, não foi realizada por 
+meio de uma busca sistemática (como grid search ou random search). Esses valores foram escolhidos com base em práticas consolidadas na literatura para 
+aplicações de redes convolucionais unidimensionais em sinais biomédicos, bem como em experimentações preliminares conduzidas neste trabalho.
+
+A progressão do número de filtros (32, 64 e 128) foi adotada com o objetivo de permitir a extração hierárquica de características, partindo de padrões 
+mais simples até representações mais complexas. Os tamanhos de kernel (5 e 3) foram definidos de forma a capturar padrões locais relevantes no sinal de 
+ECG, como variações associadas ao complexo QRS e às ondas P e T, mantendo um equilíbrio entre capacidade de representação e custo computacional.
+
+A taxa de dropout de 50\% foi empregada como uma estratégia de regularização, visando reduzir o risco de sobreajuste, especialmente considerando o uso 
+de dados aumentados artificialmente. Já a taxa de aprendizado inicial de 0,001 foi definida com base na configuração padrão do otimizador Adam, sendo 
+utilizada na literatura por apresentar boa estabilidade durante o treinamento.
+
+Destaca-se que, embora esses valores tenham se mostrado adequados para o problema proposto, a ausência de um processo sistemático de otimização de 
+hiperparâmetros constitui uma limitação deste trabalho, podendo impactar o desempenho final do modelo.
+
+\section{Arquitetura e treinamento da CNN2D}
+
+Com o objetivo de explorar informações espectro-temporais dos sinais de eletrocardiograma, foi desenvolvido um segundo modelo baseado em 
+CNN2D. Diferentemente da abordagem unidimensional, nessa estratégia os sinais de ECG foram previamente transformados em representações 
+bidimensionais por meio da análise tempo-frequência, permitindo que o modelo explorasse padrões espaciais associados às variações espectrais 
+do sinal.
+
+Inicialmente, cada segmento de ECG contendo 360 amostras foi convertido em uma imagem por meio da Transformada de Fourier de Curta Duração (STFT). Para 
+essa transformação, foi utilizada frequência de amostragem de 360 Hz, tamanho de janela (nperseg) de 64 amostras e sobreposição (noverlap) de 32 
+amostras, correspondente a 50\% de sobreposição entre janelas consecutivas. A implementação foi realizada por meio da função spectrogram da 
+biblioteca SciPy, que utiliza, por padrão, janela do tipo Hamming.
+
+A partir da STFT, foi obtido o espectrograma do sinal. Em seguida, foi aplicada uma transformação logarítmica na escala de potência, 
+utilizando $10 \log_{10}(Sxx + 10^{-10})$, com o objetivo de realçar componentes de baixa intensidade e melhorar o contraste da imagem.
+
+Em seguida, os valores foram normalizados no intervalo [0, 1] por meio de normalização min-max. Por fim, os espectrogramas foram redimensionados para o 
+formato 32 × 32 utilizando interpolação bicúbica, sendo organizados como imagens com um único canal (32 × 32 × 1), utilizadas como entrada da CNN2D. A 
+escolha dessa resolução representa um compromisso entre a preservação das características espectro-temporais relevantes e a eficiência computacional. 
+Resoluções maiores, como 64 × 64 ou 128 × 128, implicariam aumento significativo no custo computacional e no número de parâmetros do modelo, sem 
+garantia de ganhos proporcionais de desempenho, especialmente considerando o tamanho reduzido dos segmentos de entrada. Um exemplo pode ser 
+visto na figura 3.
+
+\begin{figure}[ht]
+  \caption{Exemplo de uma transformação}
+  \label{fig:exemplo2d}
+  \centering
+  \includegraphics[width=0.7\textwidth]{Exemplo_Classe_N_2D.png}
+  \source
+\end{figure}
+
+O primeiro bloco convolucional é formado por uma camada Conv2D com 32 filtros, kernel de tamanho 3 x 3, função de ativação ReLU e preenchimento 
+do tipo same, preservando as dimensões espaciais da imagem. Em seguida, foi aplicada a normalização em lote (Batch Normalization), com o 
+objetivo de estabilizar o processo de treinamento. A redução dimensional foi realizada por meio de uma camada de MaxPooling2D com fator 2 x 2.
+
+O segundo bloco convolucional segue estrutura semelhante, contendo uma camada Conv2D com 64 filtros e kernel 3 x 3, também utilizando ativação 
+ReLU e padding same. Após a convolução, foram aplicadas novamente as etapas de normalização em lote e MaxPooling2D, permitindo a extração de 
+padrões espaciais mais complexos associados às variações espectrais do ECG.
+
+O terceiro bloco convolucional é composto por uma camada Conv2D com 128 filtros e kernel 3 x 3, seguida por Batch Normalization e MaxPooling2D. 
+Esse bloco aprofunda a capacidade de representação do modelo, possibilitando a identificação de características discriminantes mais abstratas 
+entre as classes de batimentos cardíacos.
+
+Após os blocos convolucionais, a saída do modelo foi convertida em um vetor unidimensional por meio da camada Flatten. Em seguida, foi aplicada 
+uma camada de Dropout com taxa de 50\%, com o objetivo de reduzir o sobreajuste. O classificador final é composto por uma camada densa com 
+100 neurônios e função de ativação ReLU, seguida por uma camada de saída com cinco neurônios e função de ativação Softmax, correspondentes às 
+cinco classes definidas pelo padrão AAMI.
+
+\begin{table}[ht]
+  \caption{Detalhamento da arquitetura proposta}
+  \label{tab: table4}
+  \centering
+
+  \begin{tabular}{cccc}
+    \hline
+    \bfseries Camada & \bfseries Filtros/Neurônios & \bfseries Tamanho do Kernel & \bfseries Saída\\
+    \hline
+    Entrada	&	-	&	-	&	(32, 32, 1)\\
+    Conv2D 1	&	32	&	3 x 3	&	(32, 32, 32)\\
+    Batch Norm 1	&	-	&	-	&	(32, 32, 32)\\
+    Max Pooling 1	&	-	&	2 x 2	&	(16, 16, 32)\\
+    Conv2D 2	&	64	&	3 x 3	&	(16, 16, 64)\\
+    Batch Norm 2	&	-	&	-	&	(16, 16, 64)\\
+    Max Pooling 2	&	-	&	2 x 2	&	(8, 8, 64)\\
+    Conv2D 3	&	128	&	3 x 3	&	(8, 8, 128)\\
+    Batch Norm 3	&	-	&	-	&	(8, 8, 128)\\
+    Max Pooling 3	&	-	&	2 x 2	&	(4, 4, 128)\\
+    Flatten	&	-	&	-	&	(2048)\\
+    Dropout	&	-	&	-	&	(2048)\\
+    Densa (FC)	&	100	&	-	&	(100)\\
+    Saída (Softmax)	&	5	&	-	&	(5)\\
+
+    \hline
+  \end{tabular}
+
+  \source
+\end{table}
+
+O treinamento do modelo foi realizado utilizando o otimizador Adam, com taxa de aprendizado inicial igual a 0,001, e a função de perda 
+categorical cross-entropy, adequada para problemas de classificação multiclasse.
+
+Para melhorar a convergência e evitar sobreajuste, foram empregados mecanismos de controle baseados em callbacks. O método ReduceLROnPlateau 
+foi utilizado para reduzir automaticamente a taxa de aprendizado quando a perda de validação não apresentava melhora após um número 
+definido de épocas. Além disso, foi adotada a técnica de parada antecipada (Early Stopping), interrompendo o treinamento quando não havia 
+ganho significativo no desempenho de validação, restaurando os melhores pesos obtidos.
+
+O treinamento foi realizado por até 200 épocas, com tamanho de lote igual a 64 amostras, utilizando os conjuntos de treinamento e validação
+previamente definidos. Ao final do processo, o modelo treinado foi utilizado para gerar as previsões no conjunto de teste, possibilitando a 
+construção da matriz de confusão e o cálculo das métricas de desempenho para cada classe.
+
+A definição dos hiperparâmetros do modelo, como número de filtros, tamanho dos kernels, taxa de dropout e taxa de aprendizado, não foi realizada por 
+meio de uma busca sistemática. Esses valores foram definidos com base em práticas consolidadas na literatura para redes convolucionais aplicadas a 
+imagens, bem como em experimentações preliminares conduzidas neste trabalho.
+
+A progressão do número de filtros (32, 64 e 128) foi adotada com o objetivo de permitir a extração hierárquica de características espaciais, partindo 
+de padrões mais simples até representações mais abstratas. O tamanho de kernel 3 × 3 foi escolhido por ser amplamente utilizado em arquiteturas 
+convolucionais, apresentando bom desempenho na captura de padrões locais em imagens.
+
+A taxa de dropout de 50\% foi empregada como estratégia de regularização, visando reduzir o risco de sobreajuste. A taxa de aprendizado inicial de 
+0,001 foi definida com base na configuração padrão do otimizador Adam, sendo reconhecida por sua estabilidade em diferentes tarefas de aprendizado 
+profundo.
+
+Destaca-se que a ausência de um processo sistemático de otimização de hiperparâmetros constitui uma limitação deste trabalho, podendo impactar o 
+desempenho final do modelo.

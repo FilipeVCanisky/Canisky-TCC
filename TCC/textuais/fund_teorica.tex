@@ -1,0 +1,252 @@
+\chapter[Fundamentação Teórica]{Fundamentação Teórica}
+
+Neste capítulo são apresentados os conceitos para o desenvolvimento deste trabalho, abrangendo aspectos do sistema cardiovascular, 
+eletrocardiograma, processamento de sinais, inteligência artificial e, em especial, redes neurais convolucionais. A fundamentação 
+teórica fornece a base necessária para compreender as etapas de modelagem e classificação de arritmias cardíacas em registros de ECG.
+
+\section{Sistema cardiovascular e arritmias cardíacas}
+
+O sistema cardiovascular é responsável pelo transporte de oxigênio, nutrientes e substâncias essenciais para o funcionamento do organismo, além de 
+remover metabólitos através da circulação sanguínea. O coração atua como uma bomba eletromecânica, cujo funcionamento depende da geração e condução 
+de impulsos elétricos iniciados no nó sinoatrial e propagados por estruturas especializadas do miocárdio \citeonline{Guyton}.
+
+Em condições normais, a condução elétrica ocorre de forma organizada, resultando em um ritmo cardíaco regular, denominado ritmo sinusal. Alterações 
+nesse processo caracterizam as arritmias cardíacas, que são distúrbios na formação ou na condução do impulso elétrico, podendo gerar batimentos rápidos, 
+lentos ou irregulares. Essas alterações podem ter origem atrial, ventricular ou nodal, e variam desde eventos benignos até condições graves, como 
+taquicardia ventricular e fibrilação ventricular, associadas a elevado risco de mortalidade \citeonline{Samesima}.
+
+\section{Eletrocardiograma}
+
+O ECG é um exame não invasivo amplamente utilizado para o monitoramento da atividade elétrica cardíaca, registrando as variações de potencial elétrico 
+geradas durante o ciclo cardíaco. O sinal obtido é representado graficamente por um traçado composto pelas ondas P, QRS e T, bem como pelos intervalos 
+PR e QT, que fornecem informações relevantes sobre o ritmo cardíaco, a condução elétrica e possíveis alterações funcionais e estruturais do coração.
+
+\begin{figure}[ht]
+  \caption{Eletrocardiograma normal}
+  \label{fig: ECGnormal}
+  \centering
+  \includegraphics[width=0.7\textwidth]{ECG.png}
+  \legend{\citeonline{Guyton}}
+  
+\end{figure}
+
+Na figura \ref{fig: ECGnormal} é possível ver um ECG normal, onde é identificado o complexo QRS, as ondas P e T, os intervalos PR e QT, e o segmento ST. 
+Apesar da grande utilização desse exame para diagnósticos, ele é sujeito a ruídos, como interferência da rede elétrica, artefatos musculares, variação da 
+linha de base, variação entre pacientes. O que acaba impactando tanto na análise manual quanto na análise automatizada desse exame.
+
+\section{Inteligência artificial}
+
+A Inteligência Artificial (IA) refere-se ao desenvolvimento e aplicação de algoritmos capazes de identificar e aprender padrões complexos a partir de 
+grandes volumes de dados. Essas técnicas permitem que sistemas computacionais executem tarefas cognitivas, como previsão, classificação e detecção de 
+anomalias, frequentemente alcançando desempenho comparável ou superior ao de especialistas humanos \citeonline{Jiang}.
+
+Com o avanço da tecnologia, houve um aumento de dispositivos de monitoramento de saúde, notadamente os tecnologias vestíveis (wearables), como 
+relógios inteligentes e pulseiras de atividade. Esses dispositivos possibilitam o registro contínuo e não invasivo de sinais fisiológicos, gerando um 
+volume massivo de dados (Big Data) que ultrapassa a capacidade humana de análise manual em tempo hábil \citeonline{Majumder2017}. Com esse cenário, 
+o desenvolvimento de modelos automatizados robustos, capazes de processar esses sinais para detectar e classificar arritmias cardíacas se fazem necessários.
+
+\section{Redes neurais convolucionais}
+
+As Redes Neurais Convolucionais (CNNs) representam uma classe especializada de redes neurais artificiais projetadas especificamente para processar 
+dados que possuem uma topologia de grade conhecida, como séries temporais (1D), no caso de sinais de ECG, ou dados de imagem (2D), como 
+espectrogramas \citeonline{Goodfellow2016}.
+
+Diferentemente das redes neurais tradicionais (Perceptrons Multicamadas), onde cada neurônio de uma camada está conectado a todos os neurônios da 
+camada seguinte, as CNNs utilizam a operação matemática de convolução no lugar da multiplicação matricial convencional em pelo menos uma de suas 
+camadas. Essa arquitetura permite que o modelo aprenda filtros (ou kernels) que deslizam sobre os dados de entrada, extraindo características locais 
+e preservando a relação espacial ou temporal dos dados.
+
+Matematicamente, em bibliotecas de aprendizado profundo, a operação de convolução unidimensional discreta aplicada a uma entrada $x$ com um 
+filtro $w$ de tamanho $K$, pode ser expressa pela seguinte equação:
+
+\begin{equation}
+    \label{eq: eq1}
+	y[i] = \sum_{k=0}^{K-1} x[i+k] \cdot w[k]
+\end{equation}
+
+Onde $x[i+k]$ representa o valor do sinal de entrada deslocado, $w[k]$ é o peso do filtro na posição $k$, e $y[i]$ é o valor resultante na saída. 
+O conjunto desses valores de saída compõe o que é chamado de mapa de características (\textit{feature map}). O mapa de características atua como um 
+ativador de padrões, destacando as regiões do sinal original onde as características buscadas pelo filtro, como a inclinação do complexo QRS em 
+um batimento, estão mais presentes.
+
+Após a operação de convolução, os mapas de características são invariavelmente submetidos a uma função de ativação não linear. No presente trabalho, 
+adota-se a função Unidade Linear Retificada (ReLU), definida por:
+
+\begin{equation}
+    \label{eq: eq2}
+    f(x) = \max(0, x)
+\end{equation}
+
+A aplicação da ReLU garante que valores negativos resultantes da convolução sejam descartados (zerados), enquanto valores positivos sejam mantidos 
+inalterados. Essa introdução de não linearidade é estritamente necessária para que a rede consiga mapear funções complexas. Além disso, a ReLU é 
+amplamente adotada por sua eficiência computacional, permitindo o treinamento eficaz de arquiteturas profundas \citeonline{Goodfellow2016}.
+
+Uma arquitetura típica de CNN é composta por uma sequência de três tipos principais de camadas: camadas convolucionais, responsáveis pela extração de 
+característica. Camadas de subamostragem (pooling), que reduzem a dimensionalidade dos mapas de características e conferem invariância a pequenas 
+translações. E camadas totalmente conectadas (dense layers), que realizam a classificação final com base nos atributos extraídos. Essa estrutura 
+hierárquica permite que a rede aprenda desde padrões simples, como bordas e picos, nas primeiras camadas, até conceitos abstratos e complexos nas 
+camadas mais profundas \citeonline{Yamashita}.
+
+
+\section{Preparação e Representação dos Dados}
+
+O desempenho de algoritmos de aprendizado profundo é fortemente influenciado pela forma como os dados são representados e pré-processados. Em sinais 
+biomédicos como o ECG, os dados brutos frequentemente apresentam variações de amplitude e ruídos de linha de base que podem dificultar a convergência 
+do modelo durante o treinamento. Portanto, técnicas de normalização, como a padronização Z-score ou a normalização Min-Max, são fundamentais para 
+garantir que as características de entrada estejam na mesma escala, facilitando a otimização dos pesos da rede.
+
+Além do pré-processamento no domínio do tempo, a representação adequada do sinal é crucial para explorar diferentes arquiteturas de redes neurais. 
+Enquanto as CNNs 1D operam diretamente sobre a série temporal, as CNNs 2D exigem uma transformação dos dados para o domínio tempo-frequência.
+
+Para converter o sinal unidimensional em uma representação bidimensional (imagem), utiliza-se frequentemente a Transformada de Fourier de Curta 
+Duração (STFT). O ECG é um sinal não estacionário, ou seja, suas frequências variam ao longo do tempo. A Transformada de Fourier clássica captura 
+apenas o conteúdo frequencial global, perdendo a informação de quando essas frequências ocorrem. A STFT supera essa limitação ao dividir o sinal 
+em janelas temporais curtas e aplicar a transformada em cada segmento, gerando um espectrograma que representa a densidade espectral de energia ao 
+longo do tempo \citeonline{Stankovic2016}. Essa representação visual permite que a CNN2D identifique padrões complexos, como a variação abrupta de 
+frequência no complexo QRS.
+
+A STFT para um sinal de tempo discreto $x[n]$ é definida pela equação:
+
+\begin{equation}
+    \label{eq: eq3}
+    X(m, \omega) = \sum_{n=-\infty}^{\infty} x[n] \cdot w[n-m] \cdot e^{-j\omega n}
+\end{equation}
+
+Onde $w[n]$ representa a função de janela centrada no instante de tempo $m$, e $\omega$ é a frequência angular. O quadrado da 
+magnitude dessa transformada, $|X(m, \omega)|^2$, gera o espectrograma, que representa a densidade espectral de energia ao longo do 
+tempo.
+
+Um aspecto crítico na aplicação da STFT é o compromisso fundamental entre a resolução temporal e a resolução frequencial, governado pelo Princípio da 
+Incerteza de Heisenberg (conhecido em processamento de sinais como limite de Gabor). Esse princípio estabelece que é matematicamente impossível obter 
+precisão arbitrária simultaneamente no tempo e na frequência.
+
+A escolha do tamanho da janela $w[n]$ dita esse balanço: uma janela estreita proporciona excelente localização no tempo (ideal para detectar o instante 
+exato de ocorrência de uma anomalia), mas resulta em baixa resolução em frequência. Inversamente, uma janela larga melhora a precisão frequencial, 
+mas "borra" o sinal no tempo. A definição dos parâmetros da STFT no pré-processamento do ECG é, portanto, um parâmetro de projeto essencial para 
+equilibrar a visualização de variações abruptas de alta frequência (como o complexo QRS) e de oscilações mais lentas (como as ondas P e T).
+
+
+\section{Divisão dos Dados e Validação}
+
+Um dos desafios centrais no treinamento de redes neurais artificiais é o compromisso entre a otimização e a generalização. A generalização é a
+capacidade do modelo de performar corretamente em dados inéditos. Quando um modelo se ajusta excessivamente aos dados de treino, capturando ruídos 
+ou flutuações aleatórias em vez dos padrões subjacentes, ocorre o fenômeno conhecido como sobreajuste ou \textit{overfitting}.
+
+Para diminuir esse problema e avaliar a capacidade de generalização de forma imparcial, a literatura estabelece a necessidade de particionar o conjunto 
+de dados original. Uma das abordagens mais difundidas é o método \textit{Hold-out}. Nesta técnica, os dados são divididos aleatoriamente em subconjuntos 
+distintos e independentes: o conjunto de treinamento, utilizado para o ajuste iterativo dos pesos da rede (aprendizado), e o conjunto de teste, que 
+permanece isolado durante todo o processo de otimização, sendo utilizado exclusivamente para a avaliação final do desempenho do classificador.
+
+\section{Regularização}
+
+A regularização consiste em um conjunto de estratégias aplicadas aos algoritmos de aprendizado de máquina com o objetivo de reduzir o erro de 
+generalização, mesmo que isso não reduza (ou até aumente ligeiramente) o erro de treinamento. Essas técnicas são fundamentais para prevenir o 
+\textit{overfitting}, especialmente em redes neurais profundas com grande número de parâmetros \citeonline{Goodfellow2016}.
+
+Uma das técnicas de regularização mais eficazes e amplamente utilizadas é o Dropout. Essa técnica consiste na desativação temporária e aleatória de 
+uma porcentagem de neurônios (e suas conexões) durante a fase de treinamento. Isso força a rede a aprender características mais robustas e distribuídas, 
+impedindo que os neurônios desenvolvam uma co-adaptação complexa onde um depende excessivamente da correção de erros de outros vizinhos. O Dropout aplica 
+uma máscara binária $r$ aos neurônios de uma camada, onde cada elemento de $r$ segue uma distribuição de Bernoulli com probabilidade $p$:
+
+\begin{align}
+    \label{eq: eq4}
+    r_j &\sim \text{Bernoulli}(p) \\
+    \tilde{y} &= r \odot y \nonumber
+\end{align}
+
+Onde $y$ é o vetor de ativações originais e $\tilde{y}$ é o vetor resultante após o descarte. Essa operação força a rede a aprender características 
+redundantes e distribuídas, impedindo a co-adaptação excessiva entre neurônios. No presente trabalho, utiliza-se uma taxa de $p = 0,5$ nas 
+camadas densas. Esse valor é amplamente adotado na literatura, conforme proposto por \citeonline{Srivastava}, por apresentar bom desempenho empírico na 
+redução de overfitting.
+
+Do ponto de vista teórico, a variância da distribuição Bernoulli associada ao dropout, dada por $\mathrm{Var}(m) = p(1 - p)$, é maximizada 
+em $p = 0{,}5$, o que implica maior aleatoriedade na ativação dos neurônios. No entanto, a escolha dessa taxa também depende do contexto do modelo e 
+dos dados, sendo frequentemente definida com base em validação empírica.
+
+Além do Dropout, utiliza-se a Batch Normalization (Normalização em Lote) para estabilizar o treinamento. Seu objetivo primário é mitigar o 
+problema da mudança de covariável interna (\textit{internal covariate shift}), garantindo que as entradas de cada camada tenham uma distribuição estável. 
+Para um minilote $\mathcal{B} = \{x_1, ..., x_m\}$, a operação é definida pelas seguintes etapas:
+
+1. Cálculo da média do lote: \quad $\displaystyle \mu_{\mathcal{B}} = \frac{1}{m} \sum_{i=1}^{m} x_i$ \hfill \refstepcounter{equation}(\theequation)\label{eq:eq5}
+
+2. Cálculo da variância do lote: \quad $\displaystyle \sigma_{\mathcal{B}}^2 = \frac{1}{m} \sum_{i=1}^{m} (x_i - \mu_{\mathcal{B}})^2$ \hfill \refstepcounter{equation}(\theequation)\label{eq:eq6}
+
+3. Normalização: \quad $\displaystyle \hat{x}_i = \frac{x_i - \mu_{\mathcal{B}}}{\sqrt{\sigma_{\mathcal{B}}^2 + \epsilon}}$ \hfill \refstepcounter{equation}(\theequation)\label{eq:eq7}
+
+4. Transformação afim: \quad $\displaystyle y_i = \gamma \hat{x}_i + \beta$ \hfill \refstepcounter{equation}(\theequation)\label{eq:eq8}
+
+Onde $\epsilon$ é uma constante pequena para estabilidade numérica, e $\gamma$ (escala) e $\beta$ (deslocamento) são parâmetros aprendíveis durante o 
+treinamento \citeonline{Ioffe}.
+
+\section{Funções de Perda e Otimizadores}
+
+O treinamento de uma rede neural é um problema de otimização cujo objetivo é minimizar uma função de custo (ou função de perda) que quantifica a 
+disparidade entre as previsões do modelo e os rótulos reais dos dados. Para problemas de classificação multiclasse, onde as saídas representam uma 
+distribuição de probabilidade sobre $C$ classes mutuamente exclusivas, a função de perda mais adequada e amplamente utilizada é a Entropia Cruzada 
+Categórica (Categorical Cross-Entropy) \citeonline{Goodfellow2016}.
+
+Matematicamente, essa função penaliza o modelo de forma logarítmica quando ele atribui uma probabilidade baixa à classe correta. Ao minimizar a 
+entropia cruzada, a rede busca aproximar a distribuição de probabilidade predita (geralmente obtida via função de ativação Softmax na camada de saída) 
+da distribuição real dos dados, maximizando assim a classificação correta \citeonline{Bishop2006}.
+
+Para realizar a minimização dessa função de perda, utilizam-se algoritmos de otimização que ajustam iterativamente os pesos da rede com base nos 
+gradientes calculados pelo algoritmo de Backpropagation. Embora o Gradiente Descendente Estocástico seja a base desses métodos, algoritmos com taxas 
+de aprendizado adaptativas têm se mostrado mais eficientes em cenários complexos.
+
+O otimizador Adam (Adaptive Moment Estimation), combina as propriedades do AdaGrad, que performa bem com gradientes esparsos, e do RMSProp, que lida 
+com objetivos não estacionários. O algoritmo calcula taxas de aprendizado adaptativas individuais para cada parâmetro a partir das estimativas do 
+primeiro e segundo momentos dos gradientes. O grande diferencial do Adam em relação aos seus 
+predecessores é a inclusão de uma correção de viés (bias correction), que compensa o fato de os momentos serem inicializados como zero. Essa 
+característica torna o Adam mais robusto nas etapas iniciais do treinamento e reduz a necessidade de ajuste fino (tuning) dos hiperparâmetros, 
+garantindo uma convergência estável mesmo em cenários ruidosos \citeonline{Ruder2016}.
+
+\section{Métricas de Avaliação}
+
+A avaliação quantitativa de modelos de classificação é realizada através da análise da matriz de confusão. Esta matriz confronta as classes reais dos 
+dados com as classes preditas pelo modelo, permitindo a extração de quatro valores fundamentais para cada classe: Verdadeiros Positivos ($TP$), 
+Verdadeiros Negativos ($TN$), Falsos Positivos ($FP$) e Falsos Negativos ($FN$).
+
+Os componentes fundamentais extraídos da matriz de confusão são definidos da seguinte forma, considerando a classe de interesse (por exemplo, 
+a presença de uma arritmia) como a classe positiva:
+
+\begin{itemize}
+    \item \textbf{Verdadeiro Positivo (TP -- \textit{True Positive}):} Representa o acerto positivo do classificador. Ocorre quando o modelo prediz 
+    corretamente a presença da condição de interesse (a arritmia existe e foi detectada).
+    
+    \item \textbf{Verdadeiro Negativo (TN -- \textit{True Negative}):} Representa o acerto negativo. Ocorre quando o modelo classifica corretamente a 
+    ausência da condição (o batimento é normal e foi classificado como normal).
+    
+    \item \textbf{Falso Positivo (FP -- \textit{False Positive}):} Também conhecido como \textbf{Erro do Tipo I} ou "alarme falso". Ocorre quando o 
+    modelo prediz incorretamente a presença da condição em uma amostra que é, na realidade, negativa (ex: classificar um batimento normal como arritmia).
+    
+    \item \textbf{Falso Negativo (FN -- \textit{False Negative}):} Também conhecido como \textbf{Erro do Tipo II}. Ocorre quando o modelo falha em 
+    detectar a condição existente, classificando uma amostra positiva como negativa (ex: classificar uma arritmia perigosa como um batimento normal).
+\end{itemize}
+
+A partir desses valores, calculam-se métricas específicas que expressam diferentes aspectos do desempenho do classificador. A Acurácia é a métrica mais 
+intuitiva, representando a proporção global de acertos do modelo sobre o total de amostras. Embora útil, ela pode ser enganosa em bases de dados 
+desbalanceadas, onde o modelo pode obter alta acurácia apenas classificando todas as amostras na classe majoritária.
+
+\begin{align}
+    \label{eq: eq9}
+    \text{Acurácia} = \frac{TP + TN}{TP + TN + FP + FN}
+\end{align}
+
+Em contextos médicos, a Sensibilidade (ou Recall) e a Especificidade assumem papel crucial. A Sensibilidade mede a capacidade do modelo de detectar 
+corretamente os casos positivos (presença de arritmia), evitando falsos negativos que poderiam colocar o paciente em risco. Já a Especificidade avalia 
+a capacidade de identificar corretamente os casos negativos (batimentos normais), evitando alarmes falsos.
+
+\begin{align}
+    \label{eq: eq10}
+    \text{Sensibilidade} = \frac{TP}{TP + FN} \quad ; \quad \text{Especificidade} = \frac{TN}{TN + FP}
+\end{align}
+
+A Precisão avalia a confiabilidade das predições positivas, indicando a proporção de classificações corretas entre todas as amostras que o modelo 
+classificou como positivas. Por fim, o F1-Score é a média harmônica entre a Precisão e a Sensibilidade. Esta métrica é particularmente valiosa para 
+comparar modelos, pois penaliza valores extremos: um F1-Score alto só é obtido se tanto a Precisão quanto a Sensibilidade forem altas, garantindo um 
+equilíbrio entre a detecção de arritmias e a minimização de falsos positivos.
+
+\begin{align}
+    \label{eq: eq11}
+    \text{Precisão} = \frac{TP}{TP + FP} \quad ; \quad \text{F1-Score} = 2 \cdot \frac{\text{Precisão} \cdot \text{Sensibilidade}}{\text{Precisão} + \text{Sensibilidade}}
+\end{align}

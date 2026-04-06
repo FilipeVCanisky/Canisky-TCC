@@ -1,0 +1,22 @@
+# Arquivos de dados e modelos (Python)
+*.npy
+*.keras
+*.h5
+
+# Arquivos temporários de compilação do LaTeX
+*.aux
+*.bbl
+*.blg
+*.brf
+*.idx
+*.ilg
+*.ind
+*.lof
+*.log
+*.loq
+*.lot
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz

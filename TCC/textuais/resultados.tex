@@ -1,0 +1,191 @@
+\chapter[Resultado e Discussão]{Resultado e Discussão}
+
+Este capítulo apresenta os resultados obtidos a partir do treinamento e da avaliação dos modelos de redes neurais convolucionais propostos 
+neste trabalho. São analisados o desempenho da CNN1D e da CNN2D, considerando as métricas de acurácia, sensibilidade, especificidade, precisão 
+e F1-score. Os resultados são apresentados individualmente para cada modelo e, posteriormente, comparados.
+
+\section{Resultados da CNN1D}
+
+Nesta seção são apresentados os resultados obtidos pela CNN1D, aplicada diretamente aos sinais temporais de ECG.
+
+A matriz de confusão obtida no conjunto de teste pode ser visualizada na Figura \ref{fig:matconf1d}.
+
+\begin{figure}[ht]
+  \caption{Matriz de confusão da CNN1D}
+  \label{fig:matconf1d}
+  \centering
+  \includegraphics[width=0.7\textwidth]{MatConf1D.jpeg}
+  \legend{Elaborado pelo autor (2026)}
+\end{figure}
+
+Observa-se que o modelo apresenta bom desempenho geral, com alta concentração de valores na diagonal principal da matriz, indicando boa taxa de acertos 
+entre as classes. No entanto, a análise detalhada dos erros revela padrões relevantes de confusão entre classes específicas.
+
+A classe N (batimentos normais) apresentou alguns casos de confusão com as classes S, V e F, o que pode ser explicado pela similaridade morfológica 
+entre determinados batimentos, especialmente em situações onde há variações sutis no sinal de ECG. De forma semelhante, a classe V apresentou pequenas 
+confusões com a classe F, indicando que o modelo pode ter dificuldade em distinguir padrões mais complexos ou intermediários entre essas categorias.
+
+Um ponto particularmente relevante é a ocorrência de batimentos da classe F (batimentos de fusão) classificados como pertencentes à classe N. Esse tipo 
+de erro é criticamente importante do ponto de vista clínico, uma vez que um batimento anômalo sendo interpretado como normal pode levar à subestimação 
+de condições cardíacas potencialmente relevantes. Esse resultado sugere que, embora o modelo apresente bom desempenho global, ainda há limitações na 
+capacidade de identificar corretamente padrões menos frequentes ou mais complexos.
+
+Por outro lado, a classe Q apresentou desempenho praticamente perfeito, com altíssima sensibilidade e precisão, indicando que seus padrões são mais 
+facilmente distinguíveis pelo modelo.
+
+Os valores calculados para cada métrica são apresentados na Tabela \ref{tab:table5}.
+
+\begin{table}[ht]
+  \caption{Métricas de desempenho da CNN1D}
+  \label{tab:table5}
+  \centering
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{cccccc}
+    \hline
+    \bfseries Classe & \bfseries Acurácia & \bfseries Sensibilidade & \bfseries Especificidade & \bfseries Precisão & \bfseries F1-Score\\
+    \hline
+    N & 0.9590 & 0.9250 & 0.9675 & 0.8768 & 0.9002\\
+    S & 0.9750 & 0.9300 & 0.9862 & 0.9442 & 0.9370\\
+    V & 0.9760 & 0.9300 & 0.9875 & 0.9490 & 0.9394\\
+    F & 0.9650 & 0.9000 & 0.9812 & 0.9231 & 0.9114\\
+    Q & 0.9970 & 0.9950 & 0.9975 & 0.9900 & 0.9925\\
+    \hline
+    \textbf{MÉDIA} & \textbf{0.9744} & \textbf{0.9360} & \textbf{0.9840} & \textbf{0.9366} & \textbf{0.9361}\\
+    \hline
+  \end{tabular}%
+  }
+  \source
+\end{table}
+
+De forma geral, o modelo apresentou bom desempenho, com acurácia média de 97,44\% e F1-score médio de 93,61\%. No entanto, a sensibilidade da classe 
+F (0,90) é inferior às demais, reforçando a dificuldade do modelo em identificar corretamente esse tipo de batimento. Esse comportamento é esperado, 
+dado que essa classe apresenta menor representatividade e maior complexidade morfológica em comparação às demais.
+
+\section{Resultados da CNN2D}
+
+Nesta seção são apresentados os resultados obtidos pela CNN2D, utilizando como entrada os espectrogramas gerados a partir da Transformada de 
+Fourier de Curta Duração (STFT).
+
+A matriz de confusão correspondente pode ser vista na Figura \ref{fig:matconf2d}.
+
+\begin{figure}[ht]
+  \caption{Matriz de confusão da CNN2D}
+  \label{fig:matconf2d}
+  \centering
+  \includegraphics[width=0.7\textwidth]{MatConf2D.jpeg}
+  \legend{Elaborado pelo autor (2026)}
+\end{figure}
+
+A classe N apresentou confusões principalmente com as classes S, V e F, o que pode estar associado à similaridade entre padrões espectrais de batimentos 
+normais e alguns tipos de arritmias, especialmente quando as variações são sutis no domínio da frequência. A classe S também apresentou confusão 
+relevante com a classe N, indicando dificuldade do modelo em separar completamente essas categorias.
+
+A classe V apresentou bom desempenho geral, com alta taxa de acerto, embora ainda ocorram algumas confusões com a classe F. Esse comportamento sugere 
+que, mesmo no domínio espectral, certos padrões associados a batimentos ventriculares e de fusão permanecem próximos, dificultando sua distinção.
+
+Um ponto crítico observado é novamente a confusão de batimentos da classe F com a classe N. Esse tipo de erro possui relevância clínica significativa, 
+pois representa a classificação de batimentos anômalos como normais, o que pode levar à não detecção de eventos cardíacos importantes. Além disso, 
+observa-se também confusão da classe F com a classe V, reforçando a complexidade na identificação desse tipo de batimento.
+
+Novamente a classe Q apresentou bom desempenho, com altíssima taxa de acerto, indicando que seus padrões espectrais são bem definidos e facilmente 
+separáveis pelo modelo.
+
+Os valores calculados para as métricas de avaliação da CNN2D encontram-se na Tabela \ref{tab:table6}.
+
+\begin{table}[ht]
+  \caption{Métricas de desempenho da CNN2D}
+  \label{tab:table6}
+  \centering
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{cccccc}
+    \hline
+    \bfseries Classe & \bfseries Acurácia & \bfseries Sensibilidade & \bfseries Especificidade & \bfseries Precisão & \bfseries F1-Score\\
+    \hline
+    N & 0.9570 & 0.9250 & 0.9650 & 0.8685 & 0.8959\\
+    S & 0.9730 & 0.9000 & 0.9912 & 0.9626 & 0.9302\\
+    V & 0.9720 & 0.9750 & 0.9712 & 0.8945 & 0.9330\\
+    F & 0.9690 & 0.8800 & 0.9912 & 0.9617 & 0.9191\\
+    Q & 0.9970 & 0.9900 & 0.9988 & 0.9950 & 0.9925\\
+    \hline
+    \textbf{MÉDIA} & \textbf{0.9736} & \textbf{0.9340} & \textbf{0.9835} & \textbf{0.9365} & \textbf{0.9341}\\
+    \hline
+  \end{tabular}%
+  }
+  \source
+\end{table}
+
+De maneira geral, o modelo apresentou desempenho elevado, com acurácia média de 97,36\% e F1-score médio de 93,41\%. Entretanto, observa-se que a 
+sensibilidade da classe F (0,88) é inferior às demais, indicando maior dificuldade na identificação correta desse tipo de batimento. Esse resultado 
+reforça a complexidade dessa classe e sugere que, mesmo com a utilização de representações espectro-temporais, ainda há limitações na discriminação de 
+padrões mais sutis e menos representativos.
+
+\section{Discussão e Comparativo}
+
+Os resultados obtidos indicam que ambos os modelos propostos apresentaram bom desempenho na tarefa de classificação de batimentos cardíacos, com métricas 
+médias bastante próximas entre si. A CNN1D apresentou desempenho ligeiramente superior em relação à CNN2D na maioria das métricas globais, especialmente 
+em sensibilidade e F1-score. No entanto, essa diferença não é expressiva o suficiente para afirmar, de forma conclusiva, a superioridade de uma 
+abordagem sobre a outra.
+
+A análise das matrizes de confusão evidencia que ambos os modelos apresentam maior dificuldade na classificação das classes minoritárias, especialmente 
+a classe F (batimentos de fusão). Em ambos os casos, observa-se uma tendência de confusão entre as classes F e N, o que pode ser explicado pela 
+semelhança morfológica entre esses tipos de batimentos no domínio temporal. Esse comportamento é clinicamente relevante, pois a classificação incorreta 
+de batimentos anômalos como normais pode comprometer a confiabilidade de sistemas automatizados de apoio ao diagnóstico.
+
+As curvas de aprendizado dos modelos, apresentadas nas Figuras \ref{fig:curva1d} e \ref{fig:curva2d}, permitem uma análise mais aprofundada do comportamento durante o treinamento.
+
+\begin{figure}[ht]
+  \caption{Curvas CNN1D}
+  \label{fig:curva1d}
+  \centering
+  \includegraphics[width=0.7\textwidth]{Curvas1D.png}
+  \legend{Elaborado pelo autor (2026)}
+\end{figure}
+
+\begin{figure}[ht]
+  \caption{Curvas CNN2D}
+  \label{fig:curva2d}
+  \centering
+  \includegraphics[width=0.7\textwidth]{Curvas2D.png}
+  \legend{Elaborado pelo autor (2026)}
+\end{figure}
+
+No caso da CNN1D, observa-se que a acurácia no conjunto de treinamento cresce rapidamente, aproximando-se de valores próximos a 100\%, enquanto a 
+acurácia de validação estabiliza em torno de 94\%. De forma semelhante, a função de perda apresenta queda acentuada nas primeiras épocas, seguida por 
+estabilização no conjunto de validação. Esse comportamento indica a presença de um leve sobreajuste, evidenciado pela diferença entre os desempenhos de 
+treino e validação. No entanto, esse efeito é moderado e foi adequadamente controlado pelo uso de técnicas de regularização, como Dropout e Early 
+Stopping, que interrompeu o treinamento por volta da época 14, evitando degradação do desempenho em validação.
+
+Para a CNN2D, observa-se comportamento semelhante, porém com indícios mais pronunciados de sobreajuste. A acurácia no conjunto de treinamento atinge 
+rapidamente valores próximos a 100\%, enquanto a acurácia de validação permanece em torno de 92–93\%, com maior instabilidade ao longo das épocas. 
+Além disso, a função de perda no conjunto de validação apresenta oscilações mais evidentes após as primeiras épocas, sugerindo maior sensibilidade do 
+modelo a variações nos dados de treinamento.
+
+Comparativamente, os resultados indicam que, embora a CNN2D possua alta capacidade de aprendizado, a CNN1D apresentou melhor equilíbrio entre ajuste aos 
+dados de treinamento e capacidade de generalização. Esse comportamento pode estar relacionado ao fato de que a representação temporal preserva 
+diretamente as características morfológicas do sinal de ECG, enquanto a transformação para domínio espectro-temporal pode introduzir perda de informação 
+ou simplificações decorrentes do redimensionamento das imagens.
+
+De modo geral, as curvas de aprendizado evidenciam que ambos os modelos convergem rapidamente e se beneficiam do uso de mecanismos de regularização, 
+sendo o critério de parada antecipada fundamental para evitar o sobreajuste e garantir melhor desempenho no conjunto de validação.
+
+Quando comparados com trabalhos relacionados da literatura, os resultados obtidos neste estudo apresentam desempenho inferior. Essa diferença pode ser 
+atribuída a diversos fatores. Primeiramente, muitos desses trabalhos utilizam arquiteturas mais profundas ou híbridas, combinando CNNs com outras 
+abordagens, como redes recorrentes ou mecanismos de atenção, o que aumenta a capacidade de extração de características complexas.
+
+Além disso, diferenças no pré-processamento dos sinais podem impactar significativamente o desempenho. Enquanto neste trabalho foram utilizados 
+segmentos de 360 amostras centrados no batimento, outros estudos empregam janelas maiores ou técnicas adicionais de filtragem e remoção de ruído. Outro 
+fator relevante é o protocolo de avaliação: alguns trabalhos utilizam validação cruzada entre pacientes (inter-patient), enquanto outros podem adotar 
+divisões intra-paciente, o que tende a resultar em métricas mais elevadas devido à menor variabilidade entre os dados de treino e teste.
+
+Outro aspecto importante diz respeito à definição dos hiperparâmetros. Neste trabalho, os parâmetros da rede, como número de filtros, tamanho dos 
+kernels, taxa de dropout e taxa de aprendizado, foram definidos com base em práticas comuns da literatura e experimentações preliminares, sem a 
+realização de uma busca sistemática. Essa escolha pode ter limitado o desempenho final dos modelos, uma vez que configurações mais otimizadas poderiam 
+potencialmente produzir melhores resultados.
+
+Adicionalmente, destaca-se que os resultados apresentados são provenientes de uma única execução para cada modelo, utilizando uma semente aleatória fixa. 
+Dessa forma, não foi realizada uma análise estatística baseada em múltiplas execuções independentes, o que impede a avaliação da variabilidade dos 
+resultados. Consequentemente, não é possível afirmar com rigor estatístico que as diferenças observadas entre os modelos são significativas, podendo 
+estar dentro da variância natural do processo de treinamento.
+
+Apesar dessas limitações, os resultados obtidos demonstram que tanto a abordagem baseada em sinais temporais (CNN1D) quanto a abordagem 
+espectro-temporal (CNN2D) são capazes de capturar características relevantes dos sinais de ECG, apresentando desempenho competitivo para a tarefa proposta.

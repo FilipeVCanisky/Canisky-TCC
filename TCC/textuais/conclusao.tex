@@ -1,0 +1,47 @@
+\chapter[Conclusão]{Conclusão}
+
+O presente trabalho propôs o desenvolvimento e a análise comparativa de duas arquiteturas de Redes Neurais Convolucionais (CNN1D e CNN2D) aplicadas à 
+classificação de arritmias cardíacas, utilizando a base de dados MIT-BIH. Diferentemente de abordagens que focam exclusivamente na otimização de 
+hiperparâmetros, este estudo explorou o impacto da representação dos dados na entrada da rede, contrapondo o uso de sinais brutos no domínio do 
+tempo (1D) à utilização de espectrogramas no domínio da frequência (2D). Essa perspectiva permitiu avaliar não apenas a capacidade de generalização 
+dos modelos, mas também o custo-benefício computacional associado ao pré-processamento.
+
+Analisando os resultados obtidos, pode-se concluir que ambas as estratégias mostraram-se eficazes e cumpriram o objetivo de auxiliar no diagnóstico 
+automatizado, atingindo acurácias superiores a 0.97. Contudo, a CNN1D obteve resultados ligeiramente melhores do que a abordagem bidimensional na média 
+global. Esse desempenho superior, aliado à ausência da necessidade de conversão para imagens (STFT), sugere que a arquitetura unidimensional é mais 
+viável para cenários onde a eficiência computacional é prioritária.
+
+Apesar dos resultados satisfatórios, este trabalho apresenta algumas limitações que devem ser consideradas. A definição dos hiperparâmetros das redes 
+foi realizada com base em experimentações preliminares, não sendo conduzida uma busca sistemática que pudesse garantir a obtenção da configuração ótima. 
+Além disso, os resultados apresentados correspondem a uma única execução para cada modelo, não sendo realizada uma análise estatística baseada em 
+múltiplas execuções independentes, o que limita a avaliação da variabilidade dos resultados. 
+
+Outro ponto relevante refere-se ao pré-processamento dos dados, no qual foram utilizados segmentos de tamanho fixo e técnicas específicas de aumento de 
+dados, cujas escolhas podem influenciar diretamente o desempenho dos modelos. No caso da abordagem 2D, a conversão dos sinais para espectrogramas envolve 
+parâmetros que também impactam a qualidade da representação. Por fim, destaca-se que a avaliação foi realizada exclusivamente na base MIT-BIH, não sendo 
+investigada a capacidade de generalização dos modelos em outras bases de dados.
+
+\section{Trabalhos Futuros}
+
+Como desdobramento deste estudo e visando o aprimoramento contínuo dos sistemas de classificação de arritmias, é sugerido as seguintes linhas de 
+investigação para trabalhos futuros:
+
+\begin{itemize}
+    \item \textbf{Balanceamento de Dados:} Investigar técnicas avançadas de aumento de dados (\textit{Data Augmentation}), como o uso de Redes 
+    Adversariais Generativas (GANs), para gerar amostras sintéticas das classes minoritárias (S e F), visando reduzir o viés do classificador em 
+    direção à classe normal.
+    
+    \item \textbf{Arquiteturas Híbridas:} Explorar a combinação de camadas convolucionais (CNN) para extração espacial de características com camadas 
+    recorrentes (LSTM ou GRU) para captura de dependências temporais de longo prazo, o que pode melhorar a classificação de sequências rítmicas complexas.
+    
+    \item \textbf{Generalização:} Avaliar o desempenho dos modelos treinados em outras bases de dados públicas (como a do desafio \textit{PhysioNet/CinC} 
+    ou a base da INCART), para verificar a capacidade de generalização dos algoritmos frente a diferentes equipamentos de aquisição e perfis de pacientes.
+    
+    \item \textbf{Implementação em Hardware:} Portar o modelo CNN1D para sistemas embarcados (como FPGAs ou microcontroladores ARM Cortex-M), 
+    avaliando o consumo energético e o tempo de inferência para aplicações em dispositivos vestíveis (\textit{wearables}).
+
+\end{itemize}
+
+A intenção é que esta pesquisa contribua para a evolução de diferentes metodologias capazes de classificar arritmias cardíacas com alta precisão e 
+baixo custo. Dessa maneira, tais recursos computacionais poderiam ser efetivamente integrados a dispositivos médicos e vestíveis, fornecendo suporte 
+robusto aos profissionais de saúde na realização de diagnósticos precoces e assertivos.

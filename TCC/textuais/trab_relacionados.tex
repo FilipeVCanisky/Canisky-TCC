@@ -1,0 +1,84 @@
+\chapter{Trabalhos Relacionados}
+
+A classificação automática de arritmias cardíacas tem sido amplamente investigada na literatura recente, com destaque para a transição de métodos 
+baseados em extração manual de características para abordagens de aprendizado profundo (\textit{Deep Learning}). Esta seção apresenta estudos 
+relevantes que utilizaram Redes Neurais Convolucionais (CNNs) unidimensionais e bidimensionais.
+
+\section{Abordagens Unidimensionais (1D)}
+
+O trabalho de \citeonline{Real-Time} é considerado um dos marcos na aplicação de CNNs para classificação de ECG. Os autores propuseram uma arquitetura de 
+CNN1D adaptativa e específica para o paciente, capaz de extrair características diretamente do sinal bruto, sem a necessidade de pré-processamento 
+complexo. O estudo demonstrou que redes 1D podem superar métodos tradicionais em velocidade e eficiência, alcançando acurácia superior a 97\% na 
+classificação de batimentos ventriculares e supraventriculares. Este trabalho fundamenta a escolha da CNN1D como uma das abordagens avaliadas nesta 
+pesquisa.
+
+Seguindo essa linha, \citeonline{DeepTransferableRepresentation}. propuseram uma representação profunda transferível, utilizando redes residuais aplicadas a sinais de 1D. Esse 
+trabalho propõe reutilizar os aprendizados obtidos do treinamento para detecção de arritmias para detectar infarto do miocárdio. 
+A acurácia média obtida foi de 93.4\% para a detecção de arritmias. Um ponto a ser levado em conta é a complexidade da rede utilizada, que teve 13 camadas.
+Reutilizando o aprendizado, foi obtido uma acurácia de 95.9\% para detecção de infarto do miocárdio.
+
+Em uma abordagem mais recente, \citeonline{DeepResnet} desenvolveram um modelo de rede neural residual profunda convolucional unidimensional 
+(Deep ResNet 1D) para classificar cinco classes de batimentos cardíacos da AAMI. Utilizando a base de dados PhysioNet MIT-BIH Arrhythmia, os autores 
+lidaram com o desbalanceamento aos dados aplicando a técnica de sobreamostragem sintética da classe minoritária (SMOTE) no conjunto de 
+treinamento. Avaliado através de validação cruzada de 10 vias (\textit{10-fold cross-validation}), o modelo alcançou uma acurácia média de 98,63\%, 
+evidenciando a robustez das redes residuais unidimensionais para a extração direta de características de sinais de ECG.
+
+Um ponto de discussão metodológica central que tem ganhado força na literatura recente sobre a base MIT-BIH é a distinção entre os protocolos 
+intra-paciente e inter-paciente. Trabalhos intra-paciente costumam apresentar resultados superestimados devido ao vazamento de dados, já que batimentos 
+de um mesmo indivíduo podem aparecer simultaneamente no treino e no teste. Visando superar essa limitação com uma avaliação inter-paciente rigorosa, 
+\citeonline{Zhou2023} propuseram uma abordagem combinando um Perceptron de Múltiplas Camadas (MLP), uma rede de Cápsulas de Peso e um modelo 
+Sequência-para-Sequência aplicados ao sinal 1D. O estudo alcançou uma acurácia de 99,88\% e se destacou por lidar de forma eficaz com o desbalanceamento 
+das classes minoritárias da base de dados sem recorrer a técnicas de aumento artificial, como o SMOTE.
+
+\section{Abordagens Bidimensionais (2D)}
+
+Com o objetivo de explorar informações no domínio da frequência, diversas pesquisas investigaram a transformação de sinais 1D em representações 2D. 
+\citeonline{UsingSTFT-BasedSpectrogram} desenvolveram um método baseado na Transformada de Fourier de Curta Duração (STFT) para converter batimentos de ECG em espectrogramas, 
+que serviram de entrada para uma CNN 2D. Os autores relataram uma acurácia média de 99,00\%, argumentando que a representação tempo-frequência 
+facilita a distinção de arritmias com características espectrais complexas.
+
+Diversificando as técnicas de transformação tempo-frequência, \citeonline{wavelettransformwithdeeplearningmodel} exploraram o uso da Transformada Wavelet Contínua (CWT) para converter os 
+sinais de ECG em escalogramas, que serviram de entrada para uma CNN 2D. Diferentemente da STFT utilizada nesta monografia, a CWT oferece uma resolução 
+multiescala, o que permitiu aos autores atingir uma acurácia global de 99,65\%. Apesar do excelente desempenho, a geração de escalogramas via CWT 
+é matematicamente mais custosa que a STFT, o que pode impactar aplicações em tempo real.
+
+Avançando nas metodologias de classificação, arquiteturas como os Transformers têm sido adaptadas para o processamento de imagens bidimensionais no 
+domínio médico. \citeonline{Chen2024} introduziram um método combinando mapas de tempo-frequência, gerados através da Transformada Wavelet Contínua 
+com a ondaleta complexa de Morlet, com o modelo Swin Transformer. Esta arquitetura hierárquica utiliza um mecanismo de autoatenção baseado em 
+janelas deslocadas para capturar de forma eficiente tanto as características locais quanto as dependências globais de longo alcance presentes nas 
+imagens do ECG. Avaliado na base MIT-BIH, o modelo alcançou uma acurácia de 99,34\% no cenário intra-paciente e de 98,37\% numa avaliação rigorosa 
+inter-paciente. Este estudo evidencia o grande potencial dos Transformers visuais na superação das limitações de dependência temporal das redes 
+tradicionais.
+
+Buscando unir a capacidade de extração de padrões espaciais das CNNs com a modelagem de dependências temporais, \citeonline{Franklin2022} apresentaram 
+uma arquitetura híbrida CNN-LSTM aplicada a representações 2D. O método converte os sinais de ECG em imagens em escala de cinza, as quais são processadas 
+por uma CNN 2D para identificar assinaturas morfológicas, seguidas por camadas LSTM que capturam o contexto sequencial e as dependências de longo prazo 
+dos batimentos. Esta abordagem demonstrou ser eficaz na redução do impacto de ruídos biológicos, permitindo uma classificação robusta.
+
+\section{Comparações}
+
+A Tabela \ref{tab:trabalhos_relacionados} resume o comparativo entre os métodos do estado da arte.
+
+\begin{table}[ht]
+    \caption{Comparativo entre trabalhos relacionados}
+    \label{tab:trabalhos_relacionados}
+    \centering
+    \small
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{ccccc}
+        \hline
+        \textbf{Autor/Ano} & \textbf{Entrada} & \textbf{Arquitetura} & \textbf{Classes} & \textbf{Acurácia Média} \\
+        \hline
+        Kiranyaz et al. (2016) & Sinal 1D & CNN 1D (Rasa) & 5 & $\approx$ 97.40\% \\
+        Kachuee et al. (2018) & Sinal 1D & ResNet 1D & 5 & 93.40\% \\
+        Khan et al. (2023) & Sinal 1D & Deep ResNet 1D & 5 & 98.63\% \\
+        Zhou et al. (2023) & Sinal 1D & MLP + WCapsule + Seq2Seq & 5 & 99.88\% \\
+        Huang et al. (2019) & STFT & CNN 2D & 5 & 99.00\% \\
+        Mohonta et al. (2022) & CWT & CNN2D & 5 & 99.65\% \\
+        Chen et al. (2024) & CWT & Swin Transformer & 5 & 98.37\% (Inter), 99,34\% (Intra) \\
+        Franklin et al. (2022) & Imagem 2D & CNN-LSTM & 5 & 99.33\% \\
+        \hline
+    \end{tabular}
+    }
+    \source
+\end{table}

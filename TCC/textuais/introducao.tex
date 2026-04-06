@@ -1,0 +1,71 @@
+\chapter[Introdução]{Introdução}
+
+A engenharia aplicada à saúde tem desempenhado um papel fundamental no desenvolvimento de soluções inovadoras para o diagnóstico e monitoramento 
+de doenças cardiovasculares. Dentre essas doenças, as arritmias cardíacas se destacam pela alta prevalência e pelo potencial risco à vida, 
+tornando sua detecção e classificação temas de grande importância clínica e científica. O eletrocardiograma (ECG) permanece como principal 
+exame para análise da atividade elétrica cardíaca, mas desafios relacionados ao grande volume de dados, à subjetividade e à possibilidade de 
+erros na interpretação manual evidenciam a necessidade de métodos automatizados e precisos.
+
+Neste contexto, abordagens baseadas em inteligência artificial, especialmente redes neurais convolucionais, têm sido exploradas com sucesso para 
+a classificação automática de batimentos cardíacos, contribuindo para maior agilidade, acurácia e confiabilidade nos diagnósticos. A presente 
+pesquisa propõe o desenvolvimento e a comparação de modelos CNN1D e CNN2D aplicados à identificação e classificação de arritmias em sinais de 
+ECG, tendo como base de dados o repositório MIT-BIH, referência mundial na área.
+
+Nos subtópicos seguintes serão apresentados a contextualização do tema, a justificativa para a realização deste trabalho, os objetivos 
+estabelecidos e a estrutura adotada para a elaboração deste trabalho.
+
+\section{Contextualização}
+
+As arritmias cardíacas constituem um importante problema de saúde pública, associando-se a maior risco de hospitalizações, morbidade e mortalidade 
+cardiovascular. Estudos recentes sobre a epidemiologia dos transtornos de condução e das arritmias cardíacas no Brasil apontam mais de 700 mil 
+internações entre 2014 e 2024, com aumento progressivo dos casos e predominância de atendimentos em caráter de urgência, o que sugere diagnóstico 
+tardio e manejo muitas vezes em situações críticas \citeonline{Brito}. Análises complementares mostram que esses eventos acometem com maior 
+frequência indivíduos idosos, especialmente acima de 80 anos, sobrecarregando o sistema de saúde e reforçando a necessidade de estratégias de 
+detecção precoce \citeonline{Jesus}.
+
+A Sociedade Brasileira de Cardiologia destaca o eletrocardiograma de superfície como exame fundamental para avaliação do ritmo cardíaco, 
+por ser um método não invasivo, amplamente disponível e de baixo custo, essencial para o diagnóstico de arritmias em diversos níveis de 
+atenção à saúde \citeonline{Samesima}. Porém, a interpretação manual dos registros de ECG pode ser dificultada pela variabilidade dos batimentos, 
+pela presença de artefatos e pelo volume de dados gerados em contextos de monitorização contínua, aumentando 
+o risco de erros.
+
+Nesse cenário, abordagens baseadas em inteligência artificial têm ganhado destaque como ferramentas de apoio ao diagnóstico. Revisões de 
+literatura sobre modelos de deep learning para detecção de arritmias em ECG mostram que redes neurais convolucionais aplicadas à base MIT‑BIH 
+Arrhythmia Database atingem acurácia superior a 96\% na classificação de batimentos cardíacos, reforçando o potencial dessas técnicas 
+para aprimorar a detecção automática de arritmias \citeonline{Ansari} e \citeonline{Cretu}. Dessa forma, a integração entre sinais de ECG e 
+modelos computacionais avançados surge como alternativa promissora para sistemas de monitoramento cardíaco.
+
+\section{Justificativa}
+
+As arritmias cardíacas geram grande impacto clínico e econômico, com elevado número de internações, uso de recursos especializados e risco 
+aumentado de eventos fatais, o que torna necessário aprimorar estratégias de detecção e acompanhamento desses pacientes. A carga de hospitalizações 
+por transtornos de condução e arritmias no Brasil evidencia uma demanda crescente por soluções que auxiliem o diagnóstico de forma mais rápida, 
+padronizada e acessível, especialmente em serviços com alta demanda e oferta limitada de especialistas. O ECG é de fácil acesso e apresenta bons
+resultados, porém sempre depende de um especialista para dar o diagnóstico, sendo que às vezes esse diagnóstico pode ser equivocado e demorado,
+então surge como alternativa a utilização de modelos para a detecção e classificação de arritmias cardíacas. 
+
+\section{Objetivos}
+
+O objetivo geral do trabalho é desenvolver dois modelos de redes neurais convolucionais (CNN), sendo um modelo de CNN1D e um modelo CNN2D, 
+utilizando a base de dados pública e gratuita do MIT-BIH, visando detectar e classificar os batimentos com arritmia. Para alcançar o objetivo geral 
+é necessário coletar os dados, fazer o pré-processamento, separar de acordo com a classificação dos especialistas, treinar os modelos, verificar
+as métricas e comparar com resultados já obtidos por outros trabalhos. 
+
+\section{Estrutura do Trabalho}
+
+Este trabalho está organizado em seis capítulos, dispostos da seguinte forma:
+
+O \textbf{Capítulo 2} apresenta a \textbf{Fundamentação Teórica}, abordando os conceitos essenciais para a compreensão do estudo, incluindo o 
+funcionamento das CNNs, técnicas de regularização, otimizadores e as métricas de avaliação de desempenho utilizadas para a classificação de arritmias.
+
+O \textbf{Capítulo 3} descreve os \textbf{Trabalhos Relacionados}, contextualizando a pesquisa no estado da arte atual. Nesta seção, são discutidas 
+abordagens anteriores que utilizaram modelos unidimensionais e bidimensionais, estabelecendo um comparativo direto com a metodologia proposta.
+
+O \textbf{Capítulo 4} detalha a \textbf{Metodologia} adotada, descrevendo a base de dados MIT-BIH Arrhythmia Database, as etapas de pré-processamento 
+dos sinais (incluindo normalização e segmentação), a geração de espectrogramas via STFT e a arquitetura das redes CNN1D e CNN2D desenvolvidas.
+
+O \textbf{Capítulo 5} expõe os \textbf{Resultados e Discussão}, apresentando as métricas de desempenho obtidas (acurácia, sensibilidade, especificidade, 
+precisão e F1-Score), as matrizes de confusão e uma análise comparativa entre as abordagens temporal (1D) e espectro-temporal (2D).
+
+Por fim, o \textbf{Capítulo 6} apresenta a \textbf{Conclusão}, sintetizando as contribuições do trabalho, as limitações encontradas e sugerindo 
+direções para trabalhos futuros.
