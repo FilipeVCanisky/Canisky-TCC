@@ -19,16 +19,18 @@ Reutilizando o aprendizado, foi obtido uma acurácia de 95.9\% para detecção d
 
 Em uma abordagem mais recente, \citeonline{DeepResnet} desenvolveram um modelo de rede neural residual profunda convolucional unidimensional 
 (Deep ResNet 1D) para classificar cinco classes de batimentos cardíacos da AAMI. Utilizando a base de dados PhysioNet MIT-BIH Arrhythmia, os autores 
-lidaram com o desbalanceamento aos dados aplicando a técnica de sobreamostragem sintética da classe minoritária (SMOTE) no conjunto de 
-treinamento. Avaliado através de validação cruzada de 10 vias (\textit{10-fold cross-validation}), o modelo alcançou uma acurácia média de 98,63\%, 
+lidaram com o desbalanceamento dos dados aplicando a técnica de sobreamostragem sintética da classe minoritária (SMOTE) no conjunto de 
+treinamento. Avaliado através de validação cruzada de 10 dobras (\textit{10-fold cross-validation}), o modelo alcançou uma acurácia média de 98,63\%, 
 evidenciando a robustez das redes residuais unidimensionais para a extração direta de características de sinais de ECG.
 
 Um ponto de discussão metodológica central que tem ganhado força na literatura recente sobre a base MIT-BIH é a distinção entre os protocolos 
-intra-paciente e inter-paciente. Trabalhos intra-paciente costumam apresentar resultados superestimados devido ao vazamento de dados, já que batimentos 
-de um mesmo indivíduo podem aparecer simultaneamente no treino e no teste. Visando superar essa limitação com uma avaliação inter-paciente rigorosa, 
-\citeonline{Zhou2023} propuseram uma abordagem combinando um Perceptron de Múltiplas Camadas (MLP), uma rede de Cápsulas de Peso e um modelo 
-Sequência-para-Sequência aplicados ao sinal 1D. O estudo alcançou uma acurácia de 99,88\% e se destacou por lidar de forma eficaz com o desbalanceamento 
-das classes minoritárias da base de dados sem recorrer a técnicas de aumento artificial, como o SMOTE.
+intra-paciente e inter-paciente. Trabalhos baseados no protocolo intra-paciente são fundamentais para validar a capacidade inicial de abstração e 
+aprendizado das arquiteturas de rede. No entanto, por permitirem que batimentos de um mesmo indivíduo apareçam simultaneamente no treino, validação e 
+teste, esses estudos tendem a reportar métricas de acurácia mais elevadas em comparação a cenários de aplicação clínica. Buscando focar na capacidade 
+de generalização e visando uma avaliação inter-paciente rigorosa, \citeonline{Zhou2023} propuseram uma abordagem combinando um Perceptron de 
+Múltiplas Camadas (MLP), uma rede de cápsulas ponderadas e um modelo Sequência-para-Sequência aplicados ao sinal 1D. O estudo alcançou uma acurácia de 
+99,88\% e se destacou por lidar de forma eficaz com o desbalanceamento das classes minoritárias da base de dados sem recorrer a técnicas de aumento 
+artificial, como o SMOTE.
 
 \section{Abordagens Bidimensionais (2D)}
 
@@ -75,7 +77,7 @@ A Tabela \ref{tab:trabalhos_relacionados} resume o comparativo entre os métodos
         Zhou et al. (2023) & Sinal 1D & MLP + WCapsule + Seq2Seq & 5 & 99.88\% \\
         Huang et al. (2019) & STFT & CNN 2D & 5 & 99.00\% \\
         Mohonta et al. (2022) & CWT & CNN2D & 5 & 99.65\% \\
-        Chen et al. (2024) & CWT & Swin Transformer & 5 & 98.37\% (Inter), 99,34\% (Intra) \\
+        Chen et al. (2024) & CWT & Swin Transformer & 5 & 98.37\% (Inter), 99.34\% (Intra) \\
         Franklin et al. (2022) & Imagem 2D & CNN-LSTM & 5 & 99.33\% \\
         \hline
     \end{tabular}

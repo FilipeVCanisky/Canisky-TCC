@@ -19,8 +19,8 @@ A base do MIT-BIH é composta por 48 registros de ECG, com aproximadamente 30 mi
 monitorados em ambiente clínico. Os sinais foram adquiridos com frequência de amostragem de 360 Hz. Cada registro foi anotado 
 por especialistas, indicando a localização temporal dos batimentos e sua respectiva classificação.
 
-Existem 15 tipos de classes no banco que podem ser vista na Tabela 1, como esperado em qualquer base de dados médicos a quantidade de casos 
-normais é muito supeior as demais.
+Existem 15 tipos de classes no banco que podem ser vista na Tabela \ref{tab: table1}, como esperado em qualquer base de dados médicos, a quantidade de casos 
+normais é muito superior às demais.
 
 \begin{table}[ht]
   \caption{Classes da base de dados do MIT-BIH}
@@ -54,7 +54,7 @@ normais é muito supeior as demais.
 
 Para reduzir a grande diferença entre as classes foi utilizado o padrão da Association for the Advancement of Medical Instrumentation (AAMI), 
 uma organização que é líder em padrões para tecnologia de saúde. O padrão da AAMI visa agrupar as 15 classes da base do MIT-BIH em 5 grupos 
-com características parecidas, como pode ser visto na Tabela 2
+com características parecidas, como pode ser visto na Tabela \ref{tab: table2}
 
 \begin{table}[ht]
   \caption{Classificação das classes de ECG segundo o padrão AAMI}
@@ -84,7 +84,9 @@ distribuição entre as classes, o que pode comprometer o desempenho.
 
 Inicialmente, foram selecionados todos os registros da base MIT-BIH Arrhythmia Database, compostos por sinais de ECG adquiridos com frequência de 
 amostragem de 360 Hz. Para cada registro, foi considerada apenas uma derivação do sinal, correspondente ao canal 0, que representa a derivação MLII. 
-As anotações disponibilizadas pela base foram utilizadas para identificar a posição temporal dos batimentos cardíacos e seus respectivos rótulos.
+A escolha desta derivação justifica-se por ser o padrão amplamente estabelecido na literatura para a análise da base MIT-BIH, visto que a MLII 
+evidencia com maior clareza a morfologia do complexo QRS. As anotações disponibilizadas pela base foram utilizadas para identificar a posição 
+temporal dos batimentos cardíacos e seus respectivos rótulos.
 
 A partir das anotações, cada batimento foi segmentado em uma janela centrada no pico do complexo QRS. Para essa segmentação, foi definida uma 
 janela inicial maior, com 400 amostras, de modo a permitir deslocamentos temporais durante o processo de aumento de dados. Batimentos localizados 
@@ -98,10 +100,11 @@ Após a segmentação e normalização, os batimentos foram mapeados para as cin
 supraventriculares (S), ventriculares (V), de fusão (F) e desconhecidos (Q). Esse mapeamento foi realizado a partir das classes originais da 
 base MIT-BIH, conforme recomendado na literatura, possibilitando a comparação dos resultados com outros trabalhos da área.
 
-Devido ao desbalanceamento natural entre as classes da base MIT-BIH Arrhythmia Database, foi aplicado um processo de balanceamento no conjunto de 
-treinamento. A definição das quantidades por classe foi baseada na classe minoritária, que possui aproximadamente 800 amostras no total. Dessa forma, 
-foram reservadas 200 amostras para validação e 200 para teste, restando cerca de 400 amostras para o treinamento nessa classe. Para garantir equilíbrio 
-entre as classes durante o treinamento, foi estabelecido um total fixo de 1600 amostras por classe.
+Nesta etapa, foi feita a divisão intra-paciente dos dados. Para evitar o vazamento de dados, a separação dos conjuntos de treinamento, validação e 
+teste ocorreu antes de qualquer técnica de balanceamento. Foram reservadas 200 amostras para validação e 200 para teste em todas as classes, para 
+que a avaliação final não fosse prejudicada pelo desbalanceamento. Como a classe minoritária (F) possui aproximadamente 800 amostras no total, o 
+uso de 400 amostras para validação e teste consumiu uma parcela significativa dos dados, deixando um volume menor para a fase de treinamento 
+dessa classe.
 
 Classes com quantidade superior a esse valor foram submetidas à subamostragem aleatória. Já as classes com menor quantidade de amostras foram balanceadas 
 por meio de aumento artificial de dados até atingir 1600 amostras por classe. Esse processo foi realizado a partir da replicação aleatória de amostras 
@@ -160,7 +163,7 @@ aplicada uma camada de Dropout com taxa de 50\%, com o objetivo de reduzir o ris
 ativação Softmax, correspondente às cinco classes definidas pelo padrão AAMI.
 
 \begin{table}[ht]
-  \caption{Detalhamento da arquitetura proposta}
+  \caption{Detalhamento da arquitetura proposta da CNN1D}
   \label{tab: table3}
   \centering
 
@@ -198,7 +201,7 @@ validação não apresenta melhora após um número definido de épocas. Além d
 interrompendo o treinamento quando não há melhora significativa no desempenho de validação, restaurando automaticamente os melhores pesos 
 obtidos. Também foi implementado o salvamento do melhor modelo durante o treinamento, com base no menor valor da perda de validação.
 
-O treinamento foi realizado por até 100 épocas, com tamanho de lote igual a 64 amostras, utilizando os conjuntos de treinamento e teste 
+O treinamento foi realizado por até 100 épocas, com tamanho de lote igual a 64 amostras, utilizando os conjuntos de treinamento e validação
 definidos na etapa de pré-processamento. Ao final do treinamento, o modelo com melhor desempenho foi carregado e utilizado para a avaliação 
 final, permitindo a obtenção das métricas de desempenho e da matriz de confusão para cada classe.
 
@@ -265,7 +268,7 @@ uma camada de Dropout com taxa de 50\%, com o objetivo de reduzir o sobreajuste.
 cinco classes definidas pelo padrão AAMI.
 
 \begin{table}[ht]
-  \caption{Detalhamento da arquitetura proposta}
+  \caption{Detalhamento da arquitetura proposta da CNN2D}
   \label{tab: table4}
   \centering
 

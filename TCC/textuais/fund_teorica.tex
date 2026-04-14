@@ -40,10 +40,10 @@ A Inteligência Artificial (IA) refere-se ao desenvolvimento e aplicação de al
 grandes volumes de dados. Essas técnicas permitem que sistemas computacionais executem tarefas cognitivas, como previsão, classificação e detecção de 
 anomalias, frequentemente alcançando desempenho comparável ou superior ao de especialistas humanos \citeonline{Jiang}.
 
-Com o avanço da tecnologia, houve um aumento de dispositivos de monitoramento de saúde, notadamente os tecnologias vestíveis (wearables), como 
+Com o avanço da tecnologia, houve um aumento de dispositivos de monitoramento de saúde, notadamente as tecnologias vestíveis (wearables), como 
 relógios inteligentes e pulseiras de atividade. Esses dispositivos possibilitam o registro contínuo e não invasivo de sinais fisiológicos, gerando um 
 volume massivo de dados (Big Data) que ultrapassa a capacidade humana de análise manual em tempo hábil \citeonline{Majumder2017}. Com esse cenário, 
-o desenvolvimento de modelos automatizados robustos, capazes de processar esses sinais para detectar e classificar arritmias cardíacas se fazem necessários.
+o desenvolvimento de modelos automatizados robustos, capazes de processar esses sinais para detectar e classificar arritmias cardíacas se faz necessários.
 
 \section{Redes neurais convolucionais}
 
@@ -64,9 +64,9 @@ filtro $w$ de tamanho $K$, pode ser expressa pela seguinte equação:
 	y[i] = \sum_{k=0}^{K-1} x[i+k] \cdot w[k]
 \end{equation}
 
-Onde $x[i+k]$ representa o valor do sinal de entrada deslocado, $w[k]$ é o peso do filtro na posição $k$, e $y[i]$ é o valor resultante na saída. 
+Em que $x[i+k]$ representa o valor do sinal de entrada deslocado, $w[k]$ é o peso do filtro na posição $k$, e $y[i]$ é o valor resultante na saída. 
 O conjunto desses valores de saída compõe o que é chamado de mapa de características (\textit{feature map}). O mapa de características atua como um 
-ativador de padrões, destacando as regiões do sinal original onde as características buscadas pelo filtro, como a inclinação do complexo QRS em 
+detector de padrões, destacando as regiões do sinal original onde as características buscadas pelo filtro, como a inclinação do complexo QRS em 
 um batimento, estão mais presentes.
 
 Após a operação de convolução, os mapas de características são invariavelmente submetidos a uma função de ativação não linear. No presente trabalho, 
@@ -112,7 +112,7 @@ A STFT para um sinal de tempo discreto $x[n]$ é definida pela equação:
     X(m, \omega) = \sum_{n=-\infty}^{\infty} x[n] \cdot w[n-m] \cdot e^{-j\omega n}
 \end{equation}
 
-Onde $w[n]$ representa a função de janela centrada no instante de tempo $m$, e $\omega$ é a frequência angular. O quadrado da 
+Em que $w[n]$ representa a função de janela centrada no instante de tempo $m$, e $\omega$ é a frequência angular. O quadrado da 
 magnitude dessa transformada, $|X(m, \omega)|^2$, gera o espectrograma, que representa a densidade espectral de energia ao longo do 
 tempo.
 
@@ -154,7 +154,7 @@ uma máscara binária $r$ aos neurônios de uma camada, onde cada elemento de $r
     \tilde{y} &= r \odot y \nonumber
 \end{align}
 
-Onde $y$ é o vetor de ativações originais e $\tilde{y}$ é o vetor resultante após o descarte. Essa operação força a rede a aprender características 
+Em que $y$ é o vetor de ativações originais e $\tilde{y}$ é o vetor resultante após o descarte. Essa operação força a rede a aprender características 
 redundantes e distribuídas, impedindo a co-adaptação excessiva entre neurônios. No presente trabalho, utiliza-se uma taxa de $p = 0,5$ nas 
 camadas densas. Esse valor é amplamente adotado na literatura, conforme proposto por \citeonline{Srivastava}, por apresentar bom desempenho empírico na 
 redução de overfitting.
@@ -175,7 +175,7 @@ Para um minilote $\mathcal{B} = \{x_1, ..., x_m\}$, a operação é definida pel
 
 4. Transformação afim: \quad $\displaystyle y_i = \gamma \hat{x}_i + \beta$ \hfill \refstepcounter{equation}(\theequation)\label{eq:eq8}
 
-Onde $\epsilon$ é uma constante pequena para estabilidade numérica, e $\gamma$ (escala) e $\beta$ (deslocamento) são parâmetros aprendíveis durante o 
+Em que $\epsilon$ é uma constante pequena para estabilidade numérica, e $\gamma$ (escala) e $\beta$ (deslocamento) são parâmetros aprendíveis durante o 
 treinamento \citeonline{Ioffe}.
 
 \section{Funções de Perda e Otimizadores}
