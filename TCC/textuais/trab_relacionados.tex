@@ -12,7 +12,7 @@ complexo. O estudo demonstrou que redes 1D podem superar métodos tradicionais e
 classificação de batimentos ventriculares e supraventriculares. Este trabalho fundamenta a escolha da CNN1D como uma das abordagens avaliadas nesta 
 pesquisa.
 
-Seguindo essa linha, \citeonline{DeepTransferableRepresentation}. propuseram uma representação profunda transferível, utilizando redes residuais aplicadas a sinais de 1D. Esse 
+Seguindo essa linha, \citeonline{DeepTransferableRepresentation} propuseram uma representação profunda transferível, utilizando redes residuais aplicadas a sinais de 1D. Esse 
 trabalho propõe reutilizar os aprendizados obtidos do treinamento para detecção de arritmias para detectar infarto do miocárdio. 
 A acurácia média obtida foi de 93.4\% para a detecção de arritmias. Um ponto a ser levado em conta é a complexidade da rede utilizada, que teve 13 camadas.
 Reutilizando o aprendizado, foi obtido uma acurácia de 95.9\% para detecção de infarto do miocárdio.
@@ -55,7 +55,9 @@ tradicionais.
 Buscando unir a capacidade de extração de padrões espaciais das CNNs com a modelagem de dependências temporais, \citeonline{Franklin2022} apresentaram 
 uma arquitetura híbrida CNN-LSTM aplicada a representações 2D. O método converte os sinais de ECG em imagens em escala de cinza, as quais são processadas 
 por uma CNN 2D para identificar assinaturas morfológicas, seguidas por camadas LSTM que capturam o contexto sequencial e as dependências de longo prazo 
-dos batimentos. Esta abordagem demonstrou ser eficaz na redução do impacto de ruídos biológicos, permitindo uma classificação robusta.
+dos batimentos. Esta abordagem demonstrou ser eficaz na redução do impacto de ruídos biológicos, permitindo uma classificação robusta. Os resultados 
+obtidos alcançaram uma acurácia de 99,33\%, evidenciando o potencial da combinação entre redes convolucionais e recorrentes para a classificação 
+automática de arritmias cardíacas.
 
 \section{Comparações}
 
@@ -71,14 +73,14 @@ A Tabela \ref{tab:trabalhos_relacionados} resume o comparativo entre os métodos
         \hline
         \textbf{Autor/Ano} & \textbf{Entrada} & \textbf{Arquitetura} & \textbf{Classes} & \textbf{Acurácia Média} \\
         \hline
-        Kiranyaz et al. (2016) & Sinal 1D & CNN 1D (Rasa) & 5 & $\approx$ 97.40\% \\
-        Kachuee et al. (2018) & Sinal 1D & ResNet 1D & 5 & 93.40\% \\
-        Khan et al. (2023) & Sinal 1D & Deep ResNet 1D & 5 & 98.63\% \\
-        Zhou et al. (2023) & Sinal 1D & MLP + WCapsule + Seq2Seq & 5 & 99.88\% \\
-        Huang et al. (2019) & STFT & CNN 2D & 5 & 99.00\% \\
-        Mohonta et al. (2022) & CWT & CNN2D & 5 & 99.65\% \\
-        Chen et al. (2024) & CWT & Swin Transformer & 5 & 98.37\% (Inter), 99.34\% (Intra) \\
-        Franklin et al. (2022) & Imagem 2D & CNN-LSTM & 5 & 99.33\% \\
+        Kiranyaz et al. (2016) & Sinal 1D & CNN 1D (Rasa) & 5 & $\approx$ 97,40\% \\
+        Kachuee et al. (2018) & Sinal 1D & ResNet 1D & 5 & 93,40\% \\
+        Khan et al. (2023) & Sinal 1D & Deep ResNet 1D & 5 & 98,63\% \\
+        Zhou et al. (2023) & Sinal 1D & MLP + WCapsule + Seq2Seq & 5 & 99,88\% \\
+        Huang et al. (2019) & STFT & CNN 2D & 5 & 99,00\% \\
+        Mohonta et al. (2022) & CWT & CNN2D & 5 & 99,65\% \\
+        Chen et al. (2024) & CWT & Swin Transformer & 5 & 98,37\% (Inter), 99,34\% (Intra) \\
+        Franklin et al. (2022) & Imagem 2D & CNN-LSTM & 5 & 99,33\% \\
         \hline
     \end{tabular}
     }

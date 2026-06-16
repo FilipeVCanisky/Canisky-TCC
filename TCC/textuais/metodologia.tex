@@ -232,15 +232,17 @@ essa transformação, foi utilizada frequência de amostragem de 360 Hz, tamanho
 amostras, correspondente a 50\% de sobreposição entre janelas consecutivas. A implementação foi realizada por meio da função spectrogram da 
 biblioteca SciPy, que utiliza, por padrão, janela do tipo Hamming.
 
+Considerando os parâmetros adotados, o espectrograma gerado apresenta um número reduzido de quadros temporais, da ordem de dez segmentos ao 
+longo do sinal. Posteriormente, a representação obtida foi redimensionada para 32 × 32 pixels por meio de interpolação bicúbica, com o objetivo 
+de adequar o formato de entrada da CNN2D. Ressalta-se que esse processo de redimensionamento não adiciona novas informações ao sinal original, 
+atuando apenas na suavização e padronização da representação visual utilizada pela rede neural.
+
 A partir da STFT, foi obtido o espectrograma do sinal. Em seguida, foi aplicada uma transformação logarítmica na escala de potência, 
 utilizando $10 \log_{10}(Sxx + 10^{-10})$, com o objetivo de realçar componentes de baixa intensidade e melhorar o contraste da imagem.
 
-Em seguida, os valores foram normalizados no intervalo [0, 1] por meio de normalização min-max. Por fim, os espectrogramas foram redimensionados para o 
-formato 32 × 32 utilizando interpolação bicúbica, sendo organizados como imagens com um único canal (32 × 32 × 1), utilizadas como entrada da CNN2D. A 
-escolha dessa resolução representa um compromisso entre a preservação das características espectro-temporais relevantes e a eficiência computacional. 
-Resoluções maiores, como 64 × 64 ou 128 × 128, implicariam aumento significativo no custo computacional e no número de parâmetros do modelo, sem 
-garantia de ganhos proporcionais de desempenho, especialmente considerando o tamanho reduzido dos segmentos de entrada. Um exemplo pode ser 
-visto na figura 3.
+Em seguida, os valores foram normalizados no intervalo [0,1] por meio de normalização min-max. Posteriormente, os espectrogramas foram 
+redimensionados para o formato 32 × 32 pixels utilizando interpolação bicúbica e organizados como imagens com um único canal (32 × 32 × 1), 
+utilizadas como entrada da CNN2D. Um exemplo da representação gerada pode ser observado na Figura 3.
 
 \begin{figure}[ht]
   \caption{Exemplo de uma transformação}
@@ -308,6 +310,14 @@ ganho significativo no desempenho de validação, restaurando os melhores pesos 
 O treinamento foi realizado por até 200 épocas, com tamanho de lote igual a 64 amostras, utilizando os conjuntos de treinamento e validação
 previamente definidos. Ao final do processo, o modelo treinado foi utilizado para gerar as previsões no conjunto de teste, possibilitando a 
 construção da matriz de confusão e o cálculo das métricas de desempenho para cada classe.
+
+Embora tenham sido definidos limites máximos distintos de épocas para treinamento das arquiteturas CNN1D (100 épocas) e CNN2D (200 épocas), 
+ambas utilizaram o mecanismo de Early Stopping para interromper automaticamente o treinamento quando não fossem observadas melhorias na função 
+de perda do conjunto de validação. Dessa forma, os valores estabelecidos representam apenas limites superiores, não correspondendo necessariamente 
+ao número efetivo de épocas executadas por cada modelo. A adoção de um limite maior para a CNN2D teve como objetivo acomodar uma possível 
+convergência mais lenta decorrente da representação bidimensional baseada em espectrogramas. Entretanto, a comparação entre os modelos permanece 
+válida, uma vez que o critério efetivo de parada foi determinado pelo desempenho no conjunto de validação e não pelo número máximo de épocas 
+previamente definido.
 
 A definição dos hiperparâmetros do modelo, como número de filtros, tamanho dos kernels, taxa de dropout e taxa de aprendizado, não foi realizada por 
 meio de uma busca sistemática. Esses valores foram definidos com base em práticas consolidadas na literatura para redes convolucionais aplicadas a 

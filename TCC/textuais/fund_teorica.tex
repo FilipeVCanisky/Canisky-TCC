@@ -43,7 +43,7 @@ anomalias, frequentemente alcançando desempenho comparável ou superior ao de e
 Com o avanço da tecnologia, houve um aumento de dispositivos de monitoramento de saúde, notadamente as tecnologias vestíveis (wearables), como 
 relógios inteligentes e pulseiras de atividade. Esses dispositivos possibilitam o registro contínuo e não invasivo de sinais fisiológicos, gerando um 
 volume massivo de dados (Big Data) que ultrapassa a capacidade humana de análise manual em tempo hábil \citeonline{Majumder2017}. Com esse cenário, 
-o desenvolvimento de modelos automatizados robustos, capazes de processar esses sinais para detectar e classificar arritmias cardíacas se faz necessários.
+o desenvolvimento de modelos automatizados robustos, capazes de processar esses sinais para detectar e classificar arritmias cardíacas se faz necessário.
 
 \section{Redes neurais convolucionais}
 
@@ -82,8 +82,8 @@ inalterados. Essa introdução de não linearidade é estritamente necessária p
 amplamente adotada por sua eficiência computacional, permitindo o treinamento eficaz de arquiteturas profundas \citeonline{Goodfellow2016}.
 
 Uma arquitetura típica de CNN é composta por uma sequência de três tipos principais de camadas: camadas convolucionais, responsáveis pela extração de 
-característica. Camadas de subamostragem (pooling), que reduzem a dimensionalidade dos mapas de características e conferem invariância a pequenas 
-translações. E camadas totalmente conectadas (dense layers), que realizam a classificação final com base nos atributos extraídos. Essa estrutura 
+característica; Camadas de subamostragem (pooling), que reduzem a dimensionalidade dos mapas de características e conferem invariância a pequenas 
+translações; e camadas totalmente conectadas (dense layers), que realizam a classificação final com base nos atributos extraídos. Essa estrutura 
 hierárquica permite que a rede aprenda desde padrões simples, como bordas e picos, nas primeiras camadas, até conceitos abstratos e complexos nas 
 camadas mais profundas \citeonline{Yamashita}.
 
@@ -122,7 +122,7 @@ precisão arbitrária simultaneamente no tempo e na frequência.
 
 A escolha do tamanho da janela $w[n]$ dita esse balanço: uma janela estreita proporciona excelente localização no tempo (ideal para detectar o instante 
 exato de ocorrência de uma anomalia), mas resulta em baixa resolução em frequência. Inversamente, uma janela larga melhora a precisão frequencial, 
-mas "borra" o sinal no tempo. A definição dos parâmetros da STFT no pré-processamento do ECG é, portanto, um parâmetro de projeto essencial para 
+mas "borra"\ o sinal no tempo. A definição dos parâmetros da STFT no pré-processamento do ECG é, portanto, um parâmetro de projeto essencial para 
 equilibrar a visualização de variações abruptas de alta frequência (como o complexo QRS) e de oscilações mais lentas (como as ondas P e T).
 
 

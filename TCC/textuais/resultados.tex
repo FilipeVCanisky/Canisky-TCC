@@ -44,13 +44,13 @@ Os valores calculados para cada métrica são apresentados na Tabela \ref{tab:ta
     \hline
     \bfseries Classe & \bfseries Acurácia & \bfseries Sensibilidade & \bfseries Especificidade & \bfseries Precisão & \bfseries F1-Score\\
     \hline
-    N & 0.9590 & 0.9250 & 0.9675 & 0.8768 & 0.9002\\
-    S & 0.9750 & 0.9300 & 0.9862 & 0.9442 & 0.9370\\
-    V & 0.9760 & 0.9300 & 0.9875 & 0.9490 & 0.9394\\
-    F & 0.9650 & 0.9000 & 0.9812 & 0.9231 & 0.9114\\
-    Q & 0.9970 & 0.9950 & 0.9975 & 0.9900 & 0.9925\\
+    N & 95,90\% & 92,50\% & 96,75\% & 87,68\% & 90,02\%\\
+    S & 97,50\% & 93,00\% & 98,62\% & 94,42\% & 93,70\%\\
+    V & 97,60\% & 93,00\% & 98,75\% & 94,90\% & 93,94\%\\
+    F & 96,50\% & 90,00\% & 98,12\% & 92,31\% & 91,14\%\\
+    Q & 99,70\% & 99,50\% & 99,75\% & 99,00\% & 99,25\%\\
     \hline
-    \textbf{MÉDIA} & \textbf{0.9744} & \textbf{0.9360} & \textbf{0.9840} & \textbf{0.9366} & \textbf{0.9361}\\
+    \textbf{MÉDIA} & \textbf{97,44\%} & \textbf{93,60\%} & \textbf{98,40\%} & \textbf{93,66\%} & \textbf{93,61\%}\\
     \hline
   \end{tabular}%
   }
@@ -58,7 +58,7 @@ Os valores calculados para cada métrica são apresentados na Tabela \ref{tab:ta
 \end{table}
 
 De forma geral, o modelo apresentou bom desempenho, com acurácia média de 97,44\% e F1-score médio de 93,61\%. No entanto, a sensibilidade da classe 
-F (0,90) é inferior às demais, reforçando a dificuldade do modelo em identificar corretamente esse tipo de batimento. Esse comportamento é esperado, 
+F (90\%) é inferior às demais, reforçando a dificuldade do modelo em identificar corretamente esse tipo de batimento. Esse comportamento é esperado, 
 dado que essa classe apresenta menor representatividade e maior complexidade morfológica em comparação às demais.
 
 \section{Resultados da CNN2D}
@@ -101,13 +101,13 @@ Os valores calculados para as métricas de avaliação da CNN2D encontram-se na 
     \hline
     \bfseries Classe & \bfseries Acurácia & \bfseries Sensibilidade & \bfseries Especificidade & \bfseries Precisão & \bfseries F1-Score\\
     \hline
-    N & 0.9570 & 0.9250 & 0.9650 & 0.8685 & 0.8959\\
-    S & 0.9730 & 0.9000 & 0.9912 & 0.9626 & 0.9302\\
-    V & 0.9720 & 0.9750 & 0.9712 & 0.8945 & 0.9330\\
-    F & 0.9690 & 0.8800 & 0.9912 & 0.9617 & 0.9191\\
-    Q & 0.9970 & 0.9900 & 0.9988 & 0.9950 & 0.9925\\
+    N & 95,70\% & 92,50\% & 96,50\% & 86,85\% & 89,59\%\\
+    S & 97,30\% & 90,00\% & 99,12\% & 96,26\% & 93,02\%\\
+    V & 97,20\% & 97,50\% & 97,12\% & 89,45\% & 93,30\%\\
+    F & 96,90\% & 88,00\% & 99,12\% & 96,17\% & 91,91\%\\
+    Q & 99,70\% & 99,00\% & 99,88\% & 99,50\% & 99,25\%\\
     \hline
-    \textbf{MÉDIA} & \textbf{0.9736} & \textbf{0.9340} & \textbf{0.9835} & \textbf{0.9365} & \textbf{0.9341}\\
+    \textbf{MÉDIA} & \textbf{97,36\%} & \textbf{93,40\%} & \textbf{98,35\%} & \textbf{93,65\%} & \textbf{93,41\%}\\
     \hline
   \end{tabular}%
   }
@@ -115,7 +115,7 @@ Os valores calculados para as métricas de avaliação da CNN2D encontram-se na 
 \end{table}
 
 De maneira geral, o modelo apresentou desempenho elevado, com acurácia média de 97,36\% e F1-score médio de 93,41\%. Entretanto, observa-se que a 
-sensibilidade da classe F (0,88) é inferior às demais, indicando maior dificuldade na identificação correta desse tipo de batimento. Esse resultado 
+sensibilidade da classe F (88\%) é inferior às demais, indicando maior dificuldade na identificação correta desse tipo de batimento. Esse resultado 
 reforça a complexidade dessa classe e sugere que, mesmo com a utilização de representações espectro-temporais, ainda há limitações na discriminação de 
 padrões mais sutis e menos representativos.
 

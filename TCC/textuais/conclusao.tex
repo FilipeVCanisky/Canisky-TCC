@@ -8,8 +8,8 @@ dos modelos, mas também o custo-benefício computacional associado ao pré-proc
 
 Analisando os resultados obtidos, pode-se concluir que ambas as estratégias mostraram-se eficazes e cumpriram o objetivo de auxiliar no diagnóstico 
 automatizado, atingindo acurácias superiores a 0.97. Contudo, a CNN1D obteve resultados ligeiramente melhores do que a abordagem bidimensional na média 
-global. Esse desempenho superior, aliado à ausência da necessidade de conversão para imagens (STFT), sugere que a arquitetura unidimensional é mais 
-viável para cenários onde a eficiência computacional é prioritária.
+global. Além disso, a arquitetura unidimensional opera diretamente sobre os sinais de ECG no domínio temporal, dispensando a etapa de conversão 
+dos dados para espectrogramas.
 
 Apesar dos resultados satisfatórios, este trabalho apresenta algumas limitações que devem ser consideradas. A definição dos hiperparâmetros das redes 
 foi realizada com base em experimentações preliminares, não sendo conduzida uma busca sistemática que pudesse garantir a obtenção da configuração ótima. 
